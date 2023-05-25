@@ -133,7 +133,7 @@ class Game {
         }
         if (this.turn[this.currentTurn] == -1) {
             this.scene.time.delayedCall(500, () => {
-                this.monster.navigate();
+                this.monster.navigate(this.players);
                 this.players[0].showPossibleSpaces();
                 this.nextTurn();
             });

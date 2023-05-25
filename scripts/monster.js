@@ -13,7 +13,13 @@ class Monster extends Entity {
 
     }
 
-    navigate() {
+    navigate(players) {
+        //pass players so that the monster knows where the closest player is.
+        closestPlayer = -1
+        players.array.forEach(element => {
+            
+        });
+
         let moveX = Math.random() > 0.5 ? 1 : -1;
         let moveY = Math.random() > 0.5 ? 1 : -1;
         do {
