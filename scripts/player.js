@@ -3,36 +3,16 @@ class Player extends Entity {
         super(scene, board, game, id, x, y);
         this.items = items || [];
         this.cards = cards || [];
+        this.mutations = [];
         let text = this.scene.add.text(0, 0, "P" + this.id, {color:COLOR_DARK}).setOrigin(0.5);
         let image = this.scene.add.rectangle(0, 0, 20, 20, 0xffffff).setOrigin(0.5);
-        this.visual = this.scene.add.container(this.x, this.y, [image, text]).setDepth(1);// this.board.addChess(this.image, 11, 0, 1, true);
-        // console.log(this.board.exists(this.image));
-        // this.mover = this.scene.rexBoard.add.moveTo(this.image, {})
+        this.visual = this.scene.add.container(this.x, this.y, [image, text]).setDepth(1);
     }
 
     move(x, y) {
         super.move(x,y);    
-        // let chess = this.board.tileXYZToChess(this.x, this.y, 0);
-        // console.log(chess.x, chess.y);
-        // this.image.setPosition(chess.x, chess.y);
-        // this.mover.moveTo(chess.x, chess.y);
-        // this.updateVisual();
         this.game.updateBoard();
-
     }
-
-    // updateVisual() {    
-    //     // let text = this.scene.add.text(this.x, this.y, "P" + this.id).setOrigin(0.5);
-    //     // let playerVisual = this.board.addChess(text, this.x, this.y, 1);
-    //     // this.board.forEachTileXY( (tileXY) => {
-    //     //     this.board.removeChess(tileXY.x, tileXY.y);
-    //     //   });
-    //     this.scene.rexBoard.add.shape(this.board, this.x, this.y, 0, COLOR_PRIMARY).setScale(0.7);        
-    //     let chess = this.board.tileXYZToChess(this.x, this.y, 0);
-    //     // console.log("hi"); 
-    //     // console.log(chess);
-    //     this.visual.setPosition(chess.x, chess.y);
-    // }
 
     showPossibleSpaces() {
         var resultTileXYArray = this.board.getTileXYAtDirection({x:this.x, y:this.y}, [0, 1, 2, 3, 4, 5, 6, 7], { end: 1 });
@@ -58,6 +38,38 @@ class Player extends Entity {
 
     gainCard(card) {
         this.cards.push(card);
+    }
+
+    checkCards() {
+        this.mutations.forEach(mutation => {
+            if (mutation.name == "LShapeOnly") {
+
+            }
+            if (mutation.name == "diagonalOnly") {
+                
+            }
+            if (mutation.name == "upOrDownOnly") {
+                
+            }
+            if (mutation.name == "leftOrRightOnly") {
+                
+            }
+            if (mutation.name == "revealEarly") {
+                
+            }
+            if (mutation.name == "revealLate") {
+                
+            }
+            if (mutation.name == "itemHoldingDecrease") {
+                
+            }
+            if (mutation.name == "itemHoldingIncrease") {
+                
+            }
+            if (mutation.name == "teleportEscape") {
+                
+            }
+        });
     }
 
 }
