@@ -60,11 +60,32 @@ class Game {
 
             this.players.forEach(player => {
                 if (this.turn[this.currentTurn] == player.id) {
-                    if (player.x >= tileXY.x-1 && player.x <= tileXY.x+1 && player.y <= tileXY.y+1 && player.y >= tileXY.y-1) {
+                    console.log(tileXY)
+                    let validSpace = false;
+                    player.possibleCoords.forEach(coord => {
+                        if (coord.x == tileXY.x && coord.y == tileXY.y) {
+                            validSpace = true;
+                        }
+                    });
+                    // let p = player.possibleCoords.find(coord => {
+                    //     // console.log(coord)
+                    //     // console.log(coord.x == tileXY.x && coord.y == tileXY.y)
+                    //     (coord.x == tileXY.x && coord.y == tileXY.y)
+                    // })
+                    // console.log(p)
+                    // if (player.possibleCoords.find(coord => {
+                    //     coord.x == tileXY.x && coord.y == tileXY.y
+                    // })) {
+                    if (validSpace) {
                         player.move(tileXY.x, tileXY.y);
                         this.nextTurn();
                     }
+                    // if (player.x >= tileXY.x-1 && player.x <= tileXY.x+1 && player.y <= tileXY.y+1 && player.y >= tileXY.y-1) {
+                    //     player.move(tileXY.x, tileXY.y);
+                    //     this.nextTurn();
+                    // }
                     else {
+                        console.log("failed")
                         player.move(player.x, player.y);
                         player.showPossibleSpaces();
                     }
@@ -128,6 +149,8 @@ class Game {
         // console.log(this.currentTurn);
         if (this.currentTurn > this.turn.length - 1) {
             this.currentTurn = 0;
+            let card = new Card("LShapeOnly", "L-Shape", "You Gain Hooves", "You can only move in an L shape like the horse from chess.")
+            this.players[0].mutations = [card];
             this.scene.events.emit("gainCard", {name:"test", description:"description"});
             console.log("Gain card");
         }
