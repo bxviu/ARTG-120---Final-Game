@@ -149,9 +149,9 @@ class Game {
         // console.log(this.currentTurn);
         if (this.currentTurn > this.turn.length - 1) {
             this.currentTurn = 0;
-            let card = new Card("LShapeOnly", "L-Shape", "You Gain Hooves", "You can only move in an L shape like the horse from chess.")
+            let card = new Card("LShapeOnly", "L-Shape", "You Gain Hooves", "You can only move in\nan L shape like the\nhorse from chess.")
             this.players[0].mutations = [card];
-            this.scene.events.emit("gainCard", {name:"test", description:"description"});
+            this.scene.events.emit("gainCard", card);
             console.log("Gain card");
         }
         if (this.turn[this.currentTurn] == -1) {
