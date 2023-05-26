@@ -1,3 +1,5 @@
+let turn = 1;
+
 class Player extends Entity {
     constructor(scene, board, game, x, y, id, items, cards) {
         super(scene, board, game, id, x, y);
@@ -14,6 +16,10 @@ class Player extends Entity {
     move(x, y) {
         super.move(x,y);    
         this.game.updateBoard();
+        if(turn != 1){
+            this.scene.events.emit("removeCard");
+        }
+        turn++;
     }
 
     showPossibleSpaces() {
