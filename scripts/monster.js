@@ -14,11 +14,11 @@ class Monster extends Entity {
     }
 
     navigate(players) {
-        //pass players so that the monster knows where the closest player is.
+        //Owen 5/25/2023 pass players so that the monster knows where the closest player is.
         let closestPlayer = -1
         let closestDistance = 50;
         //Owen 5/25/2023 find the closest player
-        players.array.forEach(element => {
+        players.forEach(element => {
             let eX = element.x - this.x;
             let eY = element.y - this.y;
             let distance = Math.sqrt(Math.abs(eX**2 + eY**2));
@@ -31,11 +31,11 @@ class Monster extends Entity {
         //Owen 5/25/2023 we know the closest player, figure out which way to move
         //we will advance on the axis that is farthest from the closest player
         
-        pX = players[closestPlayer].x;
-        pY = players[closestPlayer].y;
+        let pX = players[closestPlayer].x;
+        let pY = players[closestPlayer].y;
         
-        dX = pX - this.x;
-        dY = pY - this.y;
+        let dX = pX - this.x;
+        let dY = pY - this.y;
         
         let moveX = 0;
         let moveY = 0;
@@ -50,10 +50,10 @@ class Monster extends Entity {
         }
 
         if (dY > 0) {
-            moveX++;
+            moveY++;
         } 
         else if (dY < 0) {
-            moveX--;
+            moveY--;
         }
 
         this.move(this.x + moveX, this.y + moveY);
