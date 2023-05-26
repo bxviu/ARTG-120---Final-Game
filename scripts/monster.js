@@ -15,6 +15,8 @@ class Monster extends Entity {
 
     navigate(players) {
         //Owen 5/25/2023 pass players so that the monster knows where the closest player is.
+        let chanceToMove = 0.70;
+        
         let closestPlayer = -1
         let closestDistance = 50;
         //Owen 5/25/2023 find the closest player
@@ -30,9 +32,17 @@ class Monster extends Entity {
 
         //Owen 5/25/2023 we know the closest player, figure out which way to move
         //we will advance on the axis that is farthest from the closest player
-        
-        let pX = players[closestPlayer].x;
-        let pY = players[closestPlayer].y;
+
+        //Owen 5/26/2023 if the closest player is far away, fudge its position
+        let fX = 0;
+        let fY = 0;
+        if (closestDistance > 3) {
+            fX = Math.random() > 0.5 ? 1 : -1;
+            fY = Math.random() > 0.5 ? 1 : -1;
+        }
+
+        let pX = players[closestPlayer].x + fX;
+        let pY = players[closestPlayer].y + fY;
         
         let dX = pX - this.x;
         let dY = pY - this.y;
@@ -54,6 +64,12 @@ class Monster extends Entity {
         } 
         else if (dY < 0) {
             moveY--;
+        }
+
+        //Owen 5/26/2023 make the monster slower
+        if (Math.random() > chanceToMove) {
+            moveX = 0;
+            moveY = 0;
         }
 
         this.move(this.x + moveX, this.y + moveY);
