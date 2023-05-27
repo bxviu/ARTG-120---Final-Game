@@ -1,6 +1,8 @@
 class Monster extends Entity {
     constructor(scene, board, game, x, y, id, cards) {
         super(scene, board, game, id, x, y);
+        this.oldx = x;
+        this.oldy = y;
         this.cards = cards || [];
         this.visual = this.scene.add.text(this.x, this.y, "M", {color:COLOR_DARK}).setOrigin(0.5);
         this.visual.setDepth(1);
@@ -23,6 +25,22 @@ class Monster extends Entity {
         this.move(this.x+moveX, this.y+moveY);
     }
 
+    showOldLocation(){
+        if (this.board.contains(this.oldx, this.oldy, 0)) {
+            this.board.removeChess(null, this.oldx, this.oldy, 0, true);
+        }
+        this.scene.rexBoard.add.shape(this.board, this.oldx, this.oldy, 0, COLOR_PRIMARY).setScale(0.7).fillAlpha = 0.5;        
+        let chess = this.board.tileXYZToChess(this.oldx, this.oldy, 0);
+        if (this.visual) {
+            this.visual.setPosition(chess.x, chess.y);
+        }
+    }
+
+    updateVisual() {  
+        super.updateVisual();
+        this.oldx = this.x;
+        this.oldy = this.y;
+    }
     // updateVisual() {    
     //     // console.log(this.x, this.y);
     //     this.scene.rexBoard.add.shape(this.board, this.x, this.y, 0, COLOR_PRIMARY).setScale(0.7);        

@@ -20,7 +20,7 @@ class Player extends Entity {
         if(turn != 1){
             this.scene.events.emit("removeCard");
         }
-        turn++;
+        // turn++;
     }
 
     showPossibleSpaces() {        
@@ -93,17 +93,19 @@ class Player extends Entity {
 
     showGivenSpaces() {         
         this.possibleCoords.forEach(coord => {
-            if (!this.board.contains(coord.x, coord.y)) {
-                return;
-            }
+            // if (!this.board.contains(coord.x, coord.y)) {
+            //     return;
+            // }
             if (this.game.monster.x == coord.x && this.game.monster.y == coord.y) {
-                return;
+                // return;
             }
             if (this.game.items.find(item => !item.offBoard && item.x == coord.x && item.y == coord.y)) {
-                return;
+                // return;
             }
-            this.board.removeChess(null, coord.x, coord.y, 0, true);
-            this.scene.rexBoard.add.shape(this.board, coord.x, coord.y, 0, COLOR_LIGHT).setScale(0.7);
+            
+            // this.board.removeChess(null, coord.x, coord.y, 0, true);
+            this.scene.rexBoard.add.shape(this.board, coord.x, coord.y, -1, COLOR_LIGHT).setScale(1);
+            this.board.tileXYZToChess(coord.x, coord.y, -1).fillAlpha = 0.5;
         });  
     }
 
@@ -117,18 +119,6 @@ class Player extends Entity {
 
     checkCards() {
         this.mutations.forEach(mutation => {
-            if (mutation.name == "LShapeOnly") {
-
-            }
-            if (mutation.name == "diagonalOnly") {
-                
-            }
-            if (mutation.name == "upOrDownOnly") {
-                
-            }
-            if (mutation.name == "leftOrRightOnly") {
-                
-            }
             if (mutation.name == "revealEarly") {
                 
             }

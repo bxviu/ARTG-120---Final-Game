@@ -8,7 +8,7 @@ class Game {
         this.items = [];
         this.monster = null;
         this.recentPlayerId = -1;
-        this.removed = [];
+        this.round = 0;
     }
 
     createPlayer(x, y, items, cards) {
@@ -35,6 +35,7 @@ class Game {
         this.items.push(this.createItem(5, 7, 0, "Salt"));
         this.items.push(this.createItem(11, 4, 1, "Crowbar"));
         this.items.push(this.createItem(2, 3, 2, "Book"));
+        this.items.push(this.createItem(1, 1, 3, "test"));
         // this.players.forEach(player => {
         //     this.scene.input.on('pointerdown', (event) => {
         //         player.move(player.x+1, player.y+1);
@@ -89,13 +90,37 @@ class Game {
                         }
                     });
                     if (validSpace) {
-                        this.board.removeChess(null, tileXY.x, tileXY.y, 0,  true);
-                        this.scene.rexBoard.add.shape(this.board, tileXY.x, tileXY.y, 0, COLOR_PRIMARY).setScale(0.7); 
+                        this.board.tileXYZToChess(tileXY.x, tileXY.y, -1).fillAlpha = 1;
+                        // let ch = this.board.tileXYZToChess(tileXY.x, tileXY.y, -1);
+                        // console.log(this.board.tileXYZToChess(tileXY.x, tileXY.y, -1));
+                        // this.scene.tweens.addCounter({
+                        //     from: 0.5,
+                        //     to: 1.05,
+                        //     ease: 'Linear',       // 'Cubic', 'Elastic', 'Bounce', 'Back'
+                        //     duration: 350,
+                        //     repeat: -1,            // -1: infinity
+                        //     yoyo: true,
+                        //     onUpdate(tween, targets, key, current, previous, param) {
+                        //         // var value = current;
+                        //         // var value = tween.getValue();
+                        //         ch._scaleX = tween.getValue();
+                        //         ch._scaleY = tween.getValue();
+                        //     }
+                        // });
+                        // this.board.removeChess(null, tileXY.x, tileXY.y, 0,  true);
+                        // this.scene.rexBoard.add.shape(this.board, tileXY.x, tileXY.y, 0, COLOR_PRIMARY).setScale(0.7); 
                     }
                 }
             });
         })        
         .on('tileout', (pointer, tileXY) => {
+            // this.scene.tweens.getTweens().forEach(tween => {
+            //     tween.seek(300);
+            //     this.scene.time.delayedCall(5, () => {
+            //         tween.stop();
+            //     });
+            //     // tween.destroy();
+            // });
             this.players.forEach(player => {
                 if (this.turn[this.currentTurn] == player.id) {
                     let validSpace = false;
@@ -105,8 +130,9 @@ class Game {
                         }
                     });
                     if (validSpace) {
-                        this.board.removeChess(null, tileXY.x, tileXY.y, 0,  true);
-                        this.scene.rexBoard.add.shape(this.board, tileXY.x, tileXY.y, 0, COLOR_LIGHT).setScale(0.7); 
+                        this.board.tileXYZToChess(tileXY.x, tileXY.y, -1).fillAlpha = 0.5;
+                        // this.board.removeChess(null, tileXY.x, tileXY.y, 0,  true);
+                        // this.scene.rexBoard.add.shape(this.board, tileXY.x, tileXY.y, 0, COLOR_LIGHT).setScale(0.7); 
                     }
                 }
             });
@@ -133,18 +159,20 @@ class Game {
         // console.log(this.currentTurn);
         if (this.currentTurn > this.turn.length - 1) {
             this.currentTurn = 0;
+            this.round = this.round + 1;
+            // console.log(this.round);
             let card = new Card("LShapeOnly", "L-Shape", "You Gain Hooves", "You can only move in\nan L shape like the\nhorse from chess.")
             let card2 = new Card("leftOrRightOnly", "Diagonal", "Your legs grow protrusions in such a way that you can't move straight.", "You can only move diagonally.")
             let card3 = new Card("upOrDownOnly", "Diagonal", "Your legs grow protrusions in such a way that you can't move straight.", "You can only move diagonally.")
             let card4 = new Card("diagonalOnly", "Diagonal", "Your legs grow protrusions in such a way that you can't move straight.", "You can only move diagonally.")
             
-            this.players[0].mutations = [card, card2, card3, card4];
+            this.players[0].mutations = [];
             this.scene.events.emit("gainCard", card2);
             console.log("Gain card");
         }
         if (this.turn[this.currentTurn] == -1) {
+            this.monster.navigate();
             this.scene.time.delayedCall(500, () => {
-                this.monster.navigate();
                 this.players[0].showPossibleSpaces();
                 this.nextTurn();
             });
@@ -154,68 +182,34 @@ class Game {
 
     updateBoard() {
         // clear everything
-        // Phaser.Actions.Call(this.board.tileZToChessArray(0), (gameObject) => {
-        //     gameObject.destroy();
-        // });
-        // // Phaser.Actions.Call(this.board.tileZToChessArray(0), (gameObject) => {
-        // //     gameObject.destroy();
-        // // });
         this.board.removeAllChess(true);
-        // this.board.forEachTileXY( (tileXY) => {
-        //     this.board.removeChess(null, tileXY.x, tileXY.y, 0, true);
-        //     });
 
         // check if player overlaps item
         this.itemOverlaps();
         this.playerOverlaps();
-        // this.board.removeAllChess(true);
 
-        // redraw players
-        // console.log(this.items[0]);
-        // this.items[0].updateVisual();  
-        // this.board.removeAllChess(true);
-        // this.items[0].updateVisual();  
+        // redraw entities
         this.players.forEach(player => {
-            // console.log(this.board.tileZToChessArray(0));
-            // Phaser.Actions.Call(this.board.tileZToChessArray(0), function (gameObject) {
-            //     gameObject.destroy();
-            // });
             player.updateVisual();
         });
-        this.monster.updateVisual();
+        if (this.round % 4 == 0) {
+            this.monster.updateVisual();
+            // console.log("1")
+        }
+        else {
+            this.monster.showOldLocation();
+            // console.log("2")
+        }
         // console.log(this.items);
         this.items.forEach(item => {
-            // console.log(item.name);
-            // this.board.removeChess(null, item.x, item.y, 0, true);
-
-            // if (!item.offBoard)
             item.updateVisual();
-            // else {
-                // this.scene.rexBoard.add.shape(this.board, item.x, item.y, 0, COLOR_LIGHT).setScale(0.7);
-                // this.board.removeChess(null, item.x, item.y, 0, true);
-                // if (!this.board.contains(item.x, item.y, 0)) {
-                //     this.scene.rexBoard.add.shape(this.board, item.x, item.y, 0, 0x000000).setScale(0.7);
-                // }
-                // this.board.removeChess(null, item.x, item.y, 0, true);
-                // this.board.removeChess(null, item.x, item.y, 0, true);
-                // item.move(item.x+1, item.y+1);
-                // item.updateVisual();
-                // console.log(this.board.contains(item.x, item.y, -1));
-                // console.log(this.board)
-            // }
         });
+        // the altar
         this.scene.rexBoard.add.shape(this.board, 5, 5, 0, 0xFF0000).setScale(0.7);
         this.scene.rexBoard.add.shape(this.board, 5, 6, 0, 0xFF0000).setScale(0.7);
         this.scene.rexBoard.add.shape(this.board, 6, 6, 0, 0xFF0000).setScale(0.7);
         this.scene.rexBoard.add.shape(this.board, 6, 5, 0, 0xFF0000).setScale(0.7);
-        // console.log(this.items[0]);
-        // this.items[0].updateVisual();  
-        // this.removed.forEach(item => {
-            // this.board.removeChess(null, item.x, item.y, 0, true);
-        // })
-        // this.board.removeAllChess(true);
-
-    }
+     }
 
     itemOverlaps() {
         this.items.forEach(item => {
