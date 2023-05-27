@@ -6,6 +6,7 @@ class Player extends Entity {
         this.items = items || [];
         this.cards = cards || [];
         let card = new Card("LShapeOnly", "L-Shape", "You Gain Hooves", "You can only move in an L shape like the horse from chess.")
+        let card2 = new Card("diagonalOnly", "Diagonal", "Your legs grow protrusions in such a way that you can't move straight.", "You can only move diagonally.")
         this.mutations = [];
         let text = this.scene.add.text(0, 0, "P" + this.id, {color:COLOR_DARK}).setOrigin(0.5);
         let image = this.scene.add.rectangle(0, 0, 20, 20, 0xffffff).setOrigin(0.5);
@@ -22,22 +23,31 @@ class Player extends Entity {
         turn++;
     }
 
-    showPossibleSpaces() {
+    showPossibleSpaces() {        
+        this.possibleCoords = [];
         let hasMutation = false;
+        // this.board.removeAllChess(true);
+
         this.mutations.forEach(mutation => {
             if (mutation.name == "LShapeOnly") {
-                this.showSpacesL()
+                this.showSpacesL();
                 hasMutation = true;
             }
             if (mutation.name == "diagonalOnly") {
-                
-            }
-            if (mutation.name == "upOrDownOnly") {
-                
-            }
+                this.showSpacesDiagonal();
+                hasMutation = true;
+            }          
+             
             if (mutation.name == "leftOrRightOnly") {
-                
+                this.showSpacesLeftRight();
+                hasMutation = true;
             }
+
+            if (mutation.name == "upOrDownOnly") {
+                this.showSpacesUpDown();
+                hasMutation = true;
+            }
+
         });
         if (!hasMutation) {
             this.showSpacesNormal();
@@ -45,58 +55,56 @@ class Player extends Entity {
     }
 
     showSpacesNormal() {
+        console.log(this.possibleCoords);
         var resultTileXYArray = this.board.getTileXYAtDirection({x:this.x, y:this.y}, [0, 1, 2, 3, 4, 5, 6, 7], { end: 1 });
-        var resultTileXY;
-        for (var i = 0, cnt = resultTileXYArray.length; i < cnt; i++) {
-            resultTileXY = resultTileXYArray[i];
-            if (!this.board.contains(resultTileXY.x, resultTileXY.y)) {
-                continue;
-            }
-            if (this.game.monster.x == resultTileXY.x && this.game.monster.y == resultTileXY.y) {
-                continue;
-            }
-            if (this.game.items.find(item => !item.offBoard && item.x == resultTileXY.x && item.y == resultTileXY.y)) {
-                continue;
-            }
-            this.scene.rexBoard.add.shape(this.board, resultTileXY.x, resultTileXY.y, 0, COLOR_LIGHT).setScale(0.7);
-        }
-        // console.log(resultTileXYArray);
-        this.possibleCoords = resultTileXYArray;
+        this.possibleCoords = [...this.possibleCoords, ...resultTileXYArray];
+        this.showGivenSpaces();
     }
 
     showSpacesL() {
-        // var resultTileXYArray = this.board.getTileXYAtDirection({x:this.x, y:this.y}, [0, 1, 2, 3], { end: 2 });
-        // var resultTileXY;
-        // for (var i = 0, cnt = resultTileXYArray.length; i < cnt; i++) {
-        //     resultTileXY = resultTileXYArray[i];
-        //     if (!this.board.contains(resultTileXY.x, resultTileXY.y)) {
-        //         continue;
-        //     }
-        //     if (this.game.monster.x == resultTileXY.x && this.game.monster.y == resultTileXY.y) {
-        //         continue;
-        //     }
-        //     if (this.game.items.find(item => !item.offBoard && item.x == resultTileXY.x && item.y == resultTileXY.y)) {
-        //         continue;
-        //     }
-        //     this.scene.rexBoard.add.shape(this.board, resultTileXY.x, resultTileXY.y, 0, 0xcdfdff).setScale(0.7);
-        // }
-        this.scene.rexBoard.add.shape(this.board, this.x+2, this.y+1, 0, COLOR_LIGHT).setScale(0.7);
-        this.scene.rexBoard.add.shape(this.board, this.x+2, this.y-1, 0, COLOR_LIGHT).setScale(0.7);
-        this.scene.rexBoard.add.shape(this.board, this.x+1, this.y-2, 0, COLOR_LIGHT).setScale(0.7);
-        this.scene.rexBoard.add.shape(this.board, this.x-1, this.y-2, 0, COLOR_LIGHT).setScale(0.7);
-        this.scene.rexBoard.add.shape(this.board, this.x-2, this.y+1, 0, COLOR_LIGHT).setScale(0.7);
-        this.scene.rexBoard.add.shape(this.board, this.x-2, this.y-1, 0, COLOR_LIGHT).setScale(0.7);
-        this.scene.rexBoard.add.shape(this.board, this.x-1, this.y+2, 0, COLOR_LIGHT).setScale(0.7);
-        this.scene.rexBoard.add.shape(this.board, this.x+1, this.y+2, 0, COLOR_LIGHT).setScale(0.7);
+        this.possibleCoords = [...this.possibleCoords, {x:this.x+2, y:this.y+1},
+            {x:this.x+2, y:this.y-1}, 
+            {x:this.x+1, y:this.y-2}, 
+            {x:this.x-1, y:this.y-2}, 
+            {x:this.x-2, y:this.y+1}, 
+            {x:this.x-2, y:this.y-1}, 
+            {x:this.x-1, y:this.y+2}, 
+            {x:this.x+1, y:this.y+2}];  
+        this.showGivenSpaces();
+    }
 
-        this.possibleCoords = [{x:this.x+2, y:this.y+1},
-                               {x:this.x+2, y:this.y-1}, 
-                               {x:this.x+1, y:this.y-2}, 
-                               {x:this.x-1, y:this.y-2}, 
-                               {x:this.x-2, y:this.y+1}, 
-                               {x:this.x-2, y:this.y-1}, 
-                               {x:this.x-1, y:this.y+2}, 
-                               {x:this.x+1, y:this.y+2}];
+    showSpacesDiagonal() {
+        var resultTileXYArray = this.board.getTileXYAtDirection({x:this.x, y:this.y}, [0, 1, 2, 3], { end: 1 });
+        this.possibleCoords = [...this.possibleCoords, ...resultTileXYArray];
+        this.showGivenSpaces();
+    }
+
+    showSpacesLeftRight() {
+        var resultTileXYArray = this.board.getTileXYAtDirection({x:this.x, y:this.y}, [5,7], { end: 1 });
+        this.possibleCoords = [...this.possibleCoords, ...resultTileXYArray];  
+        this.showGivenSpaces();
+    }
+
+    showSpacesUpDown() {
+        var resultTileXYArray = this.board.getTileXYAtDirection({x:this.x, y:this.y}, [4, 6], { end: 1 });
+        this.possibleCoords = [...this.possibleCoords, ...resultTileXYArray];  
+        this.showGivenSpaces();
+    }
+
+    showGivenSpaces() {         
+        this.possibleCoords.forEach(coord => {
+            if (!this.board.contains(coord.x, coord.y)) {
+                return;
+            }
+            if (this.game.monster.x == coord.x && this.game.monster.y == coord.y) {
+                return;
+            }
+            if (this.game.items.find(item => !item.offBoard && item.x == coord.x && item.y == coord.y)) {
+                return;
+            }
+            this.board.removeChess(null, coord.x, coord.y, 0, true);
+            this.scene.rexBoard.add.shape(this.board, coord.x, coord.y, 0, COLOR_LIGHT).setScale(0.7);
+        });  
     }
 
     gainItem(item) {

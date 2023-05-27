@@ -16,7 +16,9 @@ class Entity {
     }
 
     updateVisual() {    
-        // console.log(this);
+        if (this.board.contains(this.x, this.y, 0)) {
+            this.board.removeChess(null, this.x, this.y, 0, true);
+        }
         this.scene.rexBoard.add.shape(this.board, this.x, this.y, 0, COLOR_PRIMARY).setScale(0.7);        
         let chess = this.board.tileXYZToChess(this.x, this.y, 0);
         if (this.visual) {

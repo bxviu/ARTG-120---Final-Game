@@ -60,34 +60,19 @@ class Game {
 
             this.players.forEach(player => {
                 if (this.turn[this.currentTurn] == player.id) {
-                    console.log(tileXY)
+                    // console.log(tileXY)
                     let validSpace = false;
                     player.possibleCoords.forEach(coord => {
                         if (coord.x == tileXY.x && coord.y == tileXY.y) {
                             validSpace = true;
                         }
                     });
-                    // let p = player.possibleCoords.find(coord => {
-                    //     // console.log(coord)
-                    //     // console.log(coord.x == tileXY.x && coord.y == tileXY.y)
-                    //     (coord.x == tileXY.x && coord.y == tileXY.y)
-                    // })
-                    // console.log(p)
-                    // if (player.possibleCoords.find(coord => {
-                    //     coord.x == tileXY.x && coord.y == tileXY.y
-                    // })) {
                     if (validSpace) {
                         player.move(tileXY.x, tileXY.y);
                         this.nextTurn();
                     }
-                    // if (player.x >= tileXY.x-1 && player.x <= tileXY.x+1 && player.y <= tileXY.y+1 && player.y >= tileXY.y-1) {
-                    //     player.move(tileXY.x, tileXY.y);
-                    //     this.nextTurn();
-                    // }
                     else {
                         console.log("failed")
-                        player.move(player.x, player.y);
-                        player.showPossibleSpaces();
                     }
                 }
                 
@@ -97,37 +82,36 @@ class Game {
             // console.log(this.rexBoard);
             this.players.forEach(player => {
                 if (this.turn[this.currentTurn] == player.id) {
-                    if (player.x >= tileXY.x-1 && player.x <= tileXY.x+1 && player.y <= tileXY.y+1 && player.y >= tileXY.y-1) {
-                        // board.removeAllChess(true);
+                    let validSpace = false;
+                    player.possibleCoords.forEach(coord => {
+                        if (coord.x == tileXY.x && coord.y == tileXY.y) {
+                            validSpace = true;
+                        }
+                    });
+                    if (validSpace) {
                         this.board.removeChess(null, tileXY.x, tileXY.y, 0,  true);
-                        // board.removeChess(null, player.x, player.y, 0,  true);
-                        // this.rexBoard.add.shape(board, player.x, player.y, 0, COLOR_LIGHT).setScale(0.7); 
                         this.scene.rexBoard.add.shape(this.board, tileXY.x, tileXY.y, 0, COLOR_PRIMARY).setScale(0.7); 
-                        // console.log(board.contains(tileXY.x, tileXY.y, 0));   
                     }
                 }
             });
         })        
         .on('tileout', (pointer, tileXY) => {
-            // console.log(this.rexBoard);
             this.players.forEach(player => {
-
                 if (this.turn[this.currentTurn] == player.id) {
-                    if (player.x >= tileXY.x-1 && player.x <= tileXY.x+1 && player.y <= tileXY.y+1 && player.y >= tileXY.y-1) {
-                        // this.rexBoard.add.shape(board, tileXY.x, tileXY.y, 0, COLOR_PRIMARY).setScale(0.7);    
-                        // board.removeAllChess(true);
+                    let validSpace = false;
+                    player.possibleCoords.forEach(coord => {
+                        if (coord.x == tileXY.x && coord.y == tileXY.y) {
+                            validSpace = true;
+                        }
+                    });
+                    if (validSpace) {
                         this.board.removeChess(null, tileXY.x, tileXY.y, 0,  true);
-                        // board.removeChess(null, player.x, player.y, 0,  true);
                         this.scene.rexBoard.add.shape(this.board, tileXY.x, tileXY.y, 0, COLOR_LIGHT).setScale(0.7); 
-                        // this.rexBoard.add.shape(board, player.x, player.y, 0, COLOR_PRIMARY).setScale(0.7); 
-                        // console.log(board.contains(tileXY.x, tileXY.y, 0));
                     }
                 }
             });
         });
         
-        
-        // return board;
     }
 
     startGame() {
@@ -150,8 +134,12 @@ class Game {
         if (this.currentTurn > this.turn.length - 1) {
             this.currentTurn = 0;
             let card = new Card("LShapeOnly", "L-Shape", "You Gain Hooves", "You can only move in\nan L shape like the\nhorse from chess.")
-            this.players[0].mutations = [card];
-            this.scene.events.emit("gainCard", card);
+            let card2 = new Card("leftOrRightOnly", "Diagonal", "Your legs grow protrusions in such a way that you can't move straight.", "You can only move diagonally.")
+            let card3 = new Card("upOrDownOnly", "Diagonal", "Your legs grow protrusions in such a way that you can't move straight.", "You can only move diagonally.")
+            let card4 = new Card("diagonalOnly", "Diagonal", "Your legs grow protrusions in such a way that you can't move straight.", "You can only move diagonally.")
+            
+            this.players[0].mutations = [card, card2, card3, card4];
+            this.scene.events.emit("gainCard", card2);
             console.log("Gain card");
         }
         if (this.turn[this.currentTurn] == -1) {
@@ -166,16 +154,16 @@ class Game {
 
     updateBoard() {
         // clear everything
-        Phaser.Actions.Call(this.board.tileZToChessArray(0), (gameObject) => {
-            gameObject.destroy();
-        });
+        // Phaser.Actions.Call(this.board.tileZToChessArray(0), (gameObject) => {
+        //     gameObject.destroy();
+        // });
         // // Phaser.Actions.Call(this.board.tileZToChessArray(0), (gameObject) => {
         // //     gameObject.destroy();
         // // });
         this.board.removeAllChess(true);
-        this.board.forEachTileXY( (tileXY) => {
-            this.board.removeChess(null, tileXY.x, tileXY.y, 0, true);
-            });
+        // this.board.forEachTileXY( (tileXY) => {
+        //     this.board.removeChess(null, tileXY.x, tileXY.y, 0, true);
+        //     });
 
         // check if player overlaps item
         this.itemOverlaps();
@@ -198,23 +186,23 @@ class Game {
         // console.log(this.items);
         this.items.forEach(item => {
             // console.log(item.name);
-            this.board.removeChess(null, item.x, item.y, 0, true);
+            // this.board.removeChess(null, item.x, item.y, 0, true);
 
-            if (!item.offBoard)
-                item.updateVisual();
-            else {
+            // if (!item.offBoard)
+            item.updateVisual();
+            // else {
                 // this.scene.rexBoard.add.shape(this.board, item.x, item.y, 0, COLOR_LIGHT).setScale(0.7);
-                this.board.removeChess(null, item.x, item.y, 0, true);
-                if (!this.board.contains(item.x, item.y, 0)) {
-                    this.scene.rexBoard.add.shape(this.board, item.x, item.y, 0, 0x000000).setScale(0.7);
-                }
+                // this.board.removeChess(null, item.x, item.y, 0, true);
+                // if (!this.board.contains(item.x, item.y, 0)) {
+                //     this.scene.rexBoard.add.shape(this.board, item.x, item.y, 0, 0x000000).setScale(0.7);
+                // }
                 // this.board.removeChess(null, item.x, item.y, 0, true);
                 // this.board.removeChess(null, item.x, item.y, 0, true);
                 // item.move(item.x+1, item.y+1);
                 // item.updateVisual();
                 // console.log(this.board.contains(item.x, item.y, -1));
                 // console.log(this.board)
-            }
+            // }
         });
         this.scene.rexBoard.add.shape(this.board, 5, 5, 0, 0xFF0000).setScale(0.7);
         this.scene.rexBoard.add.shape(this.board, 5, 6, 0, 0xFF0000).setScale(0.7);
@@ -233,13 +221,10 @@ class Game {
         this.items.forEach(item => {
             if (!item.offBoard && item.x == this.players[0].x && item.y == this.players[0].y) {
                 console.log("overlap");
-                // console.log(item);
                 this.players[0].gainItem(item);
-                this.board.removeChess(null, item.x, item.y, 0, true);
-                // this.items.splice(this.items.indexOf(item), 1);
-                // this.removed.push(item);
+                // this.board.removeChess(null, item.x, item.y, 0, true);
+                this.items.splice(this.items.indexOf(item), 1);
                 item.removeItemfromBoard();
-                // this.updateBoard();
             }
         });
     }
