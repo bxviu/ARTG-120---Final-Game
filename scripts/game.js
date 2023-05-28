@@ -47,6 +47,13 @@ class Demo extends Phaser.Scene {
         let g = new Game(this, board);
         g.initializeGame(1);
         this.ui = new UI(this, g);
+
+        this.displayCards = this.add.text(30, 360, "Mutation Cards", {color: "#ffffff"});
+        this.displayCards.setInteractive();
+        this.displayCards.on('pointerdown', () => {
+            this.scene.pause('examples');
+            this.scene.launch('display', g.players[0].mutations);
+        })
         // board.grid.destroy();
         // graphics.clear()
 
@@ -219,7 +226,7 @@ var config = {
         mode: Phaser.Scale.FIT,
         autoCenter: Phaser.Scale.CENTER_BOTH,
     },
-    scene: Demo,
+    scene: [Demo, Display]
 };
 
 var game = new Phaser.Game(config);
