@@ -23,9 +23,47 @@ class UI {
     }
 
     drawMutation(array){
-        array.push("diagonal");
-        this.test = this.scene.add.image(100, 475, 'diagonal');
-        this.test.setScale(0.35);
+        let rand = Math.floor(Math.random() * 10);
+
+        if(rand == 0){
+            array.push("clearMuta");
+            this.test = this.scene.add.image(100, 475, 'clearMuta');
+            this.test.setScale(0.35);
+        }else if(rand == 1){
+            array.push("diagonal");
+            this.test = this.scene.add.image(100, 475, 'diagonal');
+            this.test.setScale(0.35);
+        }else if(rand == 2){
+            array.push("extraItem");
+            this.test = this.scene.add.image(100, 475, 'extraItem');
+            this.test.setScale(0.35);
+        }else if(rand == 3){
+            array.push("leftRight");
+            this.test = this.scene.add.image(100, 475, 'leftRight');
+            this.test.setScale(0.35);
+        }else if(rand == 4){
+            array.push("oneItem");
+            this.test = this.scene.add.image(100, 475, 'oneItem');
+            this.test.setScale(0.35);
+        }else if(rand == 5){
+            array.push("reveal2");
+            this.test = this.scene.add.image(100, 475, 'reveal2');
+            this.test.setScale(0.35);
+        }else if(rand == 6){
+            array.push("reveal6");
+            this.test = this.scene.add.image(100, 475, 'reveal6');
+            this.test.setScale(0.35);
+        }else if(rand == 7){
+            array.push("teleport");
+            this.test = this.scene.add.image(100, 475, 'teleport');
+            this.test.setScale(0.35);
+        }else if(rand == 8){
+            array.push("upDown");
+            this.test = this.scene.add.image(100, 475, 'upDown');
+            this.test.setScale(0.35);
+        }else if(rand == 9){
+
+        }
     }
 
     removeCard(){
