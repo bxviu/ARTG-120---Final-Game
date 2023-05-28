@@ -34,6 +34,10 @@ class UI {
         this.cardDes = this.scene.add.text(700, 480, card.description, {color: "#000000"}).setOrigin(0.5).setFontSize(12);
     }
 
+    drawMutation(){
+        
+    }
+
     removeCard(){
         this.cardLore.destroy();
         this.cardName.destroy();
