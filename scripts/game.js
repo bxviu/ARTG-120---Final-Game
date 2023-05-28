@@ -163,6 +163,9 @@ class Demo extends Phaser.Scene {
         this.events.on("removeCard", () => {
             this.ui.removeCard();
         });
+        this.events.on("drawMutation", () =>{
+            this.ui.drawMutation();
+        });
         
     }
 

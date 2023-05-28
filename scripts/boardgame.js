@@ -167,6 +167,7 @@ class Game {
             let card4 = new Card("diagonalOnly", "Diagonal", "Your legs grow protrusions in such a way that you can't move straight.", "You can only move diagonally.")
             
             this.players[0].mutations = [];
+            this.scene.events.emit("drawMutation");
             this.scene.events.emit("gainCard", card2);
             console.log("Gain card");
         }
