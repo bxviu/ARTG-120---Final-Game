@@ -4,18 +4,6 @@ class UI {
         this.scene = scene;
         this.itemsText = this.scene.add.text(10, 10, "Items: ");
     }
-    preload(){
-        this.load.path = './assets/';
-        this.load.image('clearMuta', 'clearmute.png');
-        this.load.image('diagonal', 'diagonal.png');
-        this.load.image('extraItem', 'extraItem.png');
-        this.load.image('leftRight', 'leftright.png');
-        this.load.image('oneItem', 'oneitem.png');
-        this.load.image('reveal2', 'reveal2.png');
-        this.load.image('reveal6', 'reveal6.png');
-        this.load.image('teleport', 'teleport.png');
-        this.load.image('upDown', 'updown.png');
-    }
 
     updateItemsText() {
         let itemList = "";
@@ -34,8 +22,10 @@ class UI {
         this.cardDes = this.scene.add.text(700, 480, card.description, {color: "#000000"}).setOrigin(0.5).setFontSize(12);
     }
 
-    drawMutation(){
-        
+    drawMutation(array){
+        array.push("diagonal");
+        this.test = this.scene.add.image(100, 475, 'diagonal');
+        this.test.setScale(0.1);
     }
 
     removeCard(){

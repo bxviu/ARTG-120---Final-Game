@@ -11,7 +11,16 @@ class Demo extends Phaser.Scene {
 
     preload() {
         this.load.scenePlugin('rexboardplugin', 'https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/dist/rexboardplugin.min.js', 'rexBoard', 'rexBoard');
-
+        this.load.path = './assets/';
+        this.load.image('clearMuta', 'clearmute.png');
+        this.load.image('diagonal', 'diagonal.png');
+        this.load.image('extraItem', 'extraItem.png');
+        this.load.image('leftRight', 'leftright.png');
+        this.load.image('oneItem', 'oneitem.png');
+        this.load.image('reveal2', 'reveal2.png');
+        this.load.image('reveal6', 'reveal6.png');
+        this.load.image('teleport', 'teleport.png');
+        this.load.image('upDown', 'updown.png');
     }
 
     create() {
@@ -163,8 +172,8 @@ class Demo extends Phaser.Scene {
         this.events.on("removeCard", () => {
             this.ui.removeCard();
         });
-        this.events.on("drawMutation", () =>{
-            this.ui.drawMutation();
+        this.events.on("drawMutation", (param) =>{
+            this.ui.drawMutation(param);
         });
         
     }
