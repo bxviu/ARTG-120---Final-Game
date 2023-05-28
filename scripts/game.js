@@ -14,7 +14,7 @@ class Demo extends Phaser.Scene {
         this.load.path = './assets/';
         this.load.image('clearMuta', 'clearmute.png');
         this.load.image('diagonal', 'diagonal.png');
-        this.load.image('extraItem', 'extraItem.png');
+        this.load.image('extraItem', 'extraitem.png');
         this.load.image('leftRight', 'leftright.png');
         this.load.image('oneItem', 'oneitem.png');
         this.load.image('reveal2', 'reveal2.png');

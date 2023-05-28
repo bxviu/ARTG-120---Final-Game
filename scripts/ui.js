@@ -25,7 +25,7 @@ class UI {
     drawMutation(array){
         array.push("diagonal");
         this.test = this.scene.add.image(100, 475, 'diagonal');
-        this.test.setScale(0.3);
+        this.test.setScale(0.35);
     }
 
     removeCard(){
