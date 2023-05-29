@@ -3,6 +3,7 @@ class UI {
         this.game = game
         this.scene = scene;
         this.itemsText = this.scene.add.text(10, 10, "Items: ");
+        this.action;
     }
 
     updateItemsText() {
@@ -14,13 +15,27 @@ class UI {
     
     }
 
-    drawCard(card) {
-        //need to change
-        this.scene.add.rectangle(700, 450, 150, 220, 0xaaff33).setOrigin(0.5);
-        console.log(card.description);
-        this.cardName = this.scene.add.text(700, 350, card.name, {color:"#000000"}).setOrigin(0.5);
-        this.cardLore = this.scene.add.text(700, 550, card.lore, {color:"#000000"}).setOrigin(0.5);
-        this.cardDes = this.scene.add.text(700, 480, card.description, {color: "#000000"}).setOrigin(0.5).setFontSize(12);
+    drawCard() {
+        //generates random action card
+        let rand = Math.floor(Math.random() * 4);
+
+        if(rand == 0){
+            this.action = this.scene.add.image(715, 460, 'closer').setScale(0.38);
+        }else if(rand == 1){
+            this.action = this.scene.add.image(715, 460, 'escape').setScale(0.38);
+        }else if(rand == 2){
+            this.action = this.scene.add.image(715, 460, 'extraSpace').setScale(0.38);
+        }else if(rand == 3){
+            this.action = this.scene.add.image(715, 460, 'jump8').setScale(0.38);
+        }else{
+            this.scene.events.emit("gainCard");
+        }
+        this.action.setInteractive();
+
+        //performs the action
+        this.action.on('pointerdown', () => {
+            console.log("Action");
+        })
     }
 
     drawMutation(array){
@@ -74,9 +89,7 @@ class UI {
 
     removeCard(){
         //need to change
-        this.cardLore.destroy();
-        this.cardName.destroy();
-        this.cardDes.destroy();
+        this.action.destroy();
     }
     
 }
