@@ -5,6 +5,7 @@ class Player extends Entity {
         super(scene, board, game, id, x, y);
         this.items = items || [];
         this.cards = cards || [];
+        this.actionCard = "none";
         let card = new Card("LShapeOnly", "L-Shape", "You Gain Hooves", "You can only move in an L shape like the horse from chess.")
         let card2 = new Card("diagonalOnly", "Diagonal", "Your legs grow protrusions in such a way that you can't move straight.", "You can only move diagonally.")
         this.mutations = [];
@@ -15,17 +16,50 @@ class Player extends Entity {
         this.revealLocationRounds = 4;
         this.itemSpace = 2;
         this.scene.events.on("action", (card) => {
+            this.actionCard = card;
             if (card == "closer") {
+                let randomItem = this.game.items[Math.floor(Math.random() * this.game.items.length)];
+                // let moveX = 0;
+                // let moveY = 0;
+                // if (this.x < randomItem.x) {
+                //     moveX = -1;
+                // }
+                // else {
+                //     moveX = 1;
+                // }
+                // if (this.y < randomItem.y) {
+                //     moveY = -1;
+                // }
+                // else {
+                //     moveY = 1;
+                // }
+                // this.game.items[0].move(randomItem.x +moveX, randomItem.y + moveY);
+                // this.game.items[0].updateVisual();
 
+                // console.log(randomItem);
+                var ABVector = {x: this.x - randomItem.x, y: this.y - randomItem.y};
+
+                // Normalize the ABVector
+                var ABVectorLength = Math.sqrt(ABVector.x * ABVector.x + ABVector.y * ABVector.y);
+                var normalizedABVector = {x: ABVector.x / ABVectorLength, y: ABVector.y / ABVectorLength};
+
+                // Calculate the target coordinate
+                var targetCoordinate = {x: Math.ceil(randomItem.x + 2 * normalizedABVector.x), y: Math.ceil(randomItem.y + 2 * normalizedABVector.y)};
+                // console.log(targetCoordinate);
+                randomItem.move(targetCoordinate.x, targetCoordinate.y);
+                randomItem.updateVisual();
+                // this.game.updateBoard();
             }
             else if (card == "escape") {
-
             }
             else if (card == "extraSpace") {
-                this.game.currentTurn = 0;
+                this.game.extraTurn = true;
             }
             else if (card = "jump8") {
                 this.jump8();
+            }
+            else {
+                this.actionCard = "none";
             }
         });
     }
@@ -156,10 +190,10 @@ class Player extends Entity {
         this.cards.push(card);
     }
 
-    teleportEscape() {
+    teleportEscape(distance) {
         var centerX = this.x;
         var centerY = this.y;
-        var distance = 7;
+        var distance = distance;
         var coordinates = [];
 
         for (var i = -distance; i <= distance; i++) {

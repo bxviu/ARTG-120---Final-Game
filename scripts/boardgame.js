@@ -11,6 +11,7 @@ class Game {
         this.round = 0;
         this.altarItems = [];
         this.navigated = false;
+        this.extraTurn = false;
     }
 
     createPlayer(x, y, items, cards) {
@@ -34,10 +35,11 @@ class Game {
         }
         this.monster = this.createMonster(11, 11, []);
         this.turn.push(-1);
-        this.items.push(this.createItem(5, 7, 0, "Salt"));
+        this.items.push(this.createItem(6, 9, 0, "Salt"));
         this.items.push(this.createItem(11, 4, 1, "Crowbar"));
         this.items.push(this.createItem(2, 3, 2, "Book"));
-        this.items.push(this.createItem(1, 1, 3, "test"));
+        this.items.push(this.createItem(7, 1, 3, "Torch"));
+        this.items.push(this.createItem(1, 10, 4, "Cross"));
         this.initializeBoard();
 
         this.updateBoard();
@@ -151,7 +153,17 @@ class Game {
     }
 
     nextTurn() {
-        this.currentTurn = this.currentTurn + 1;
+        if (!this.extraTurn) {
+            this.currentTurn = this.currentTurn + 1;
+        }
+        else {
+            this.currentTurn = -999;
+            this.scene.time.delayedCall(150, () => {
+                this.currentTurn = 0;
+                this.players[0].showPossibleSpaces();
+            });
+            this.extraTurn = false;
+        }
         this.players[0].checkCards();
         // console.log(this.currentTurn);
         if (this.currentTurn > this.turn.length - 1) {
@@ -160,7 +172,9 @@ class Game {
             // console.log(this.round);
             
             this.scene.events.emit("drawMutation", this.players[0].mutations);
+            // if (this.round % 2 == 0) {
             this.scene.events.emit("gainCard");
+            // }
         }
         if (this.turn[this.currentTurn] == -1 && !this.navigated) {
             this.navigated = true;
@@ -233,7 +247,7 @@ class Game {
 
     playerOverlaps() {
         if (((this.players[0].x == 5 && this.players[0].y == 5) || (this.players[0].x == 5 && this.players[0].y == 6) || (this.players[0].x == 6 && this.players[0].y == 6) || (this.players[0].x == 6 && this.players[0].y == 5))) {
-            if (this.altarItems.length < 4) {
+            if (this.altarItems.length < 5) {
                 console.log("altar");
                 this.altarItems.push(...this.players[0].items);
                 console.log(this.altarItems);
@@ -251,7 +265,11 @@ class Game {
     monsterOverlaps() {
         if (this.players[0].x == this.monster.x && this.players[0].y == this.monster.y) {
             if (this.players[0].mutations.find(mutation => mutation == "teleport") != undefined) {
-                this.players[0].teleportEscape();
+                this.players[0].teleportEscape(7);
+                return true;
+            }
+            if (this.players[0].actionCard == "escape") {
+                this.players[0].teleportEscape(3);
                 return true;
             }
             else {
