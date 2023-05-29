@@ -104,10 +104,10 @@ class Display extends Phaser.Scene{
         this.left.on('pointerdown', () => {
 
         })
-        this.right = this.add.text(300, 290, ">", {color: "#00ff00"}).setFontSize(50);
+        this.right = this.add.text(470, 290, ">", {color: "#00ff00"}).setFontSize(50);
         this.right.setInteractive();
         this.right.on('pointerdown', () => {
-            
+
         })
         this.test.setScale(0.35);
         this.leave = this.add.text(750, 0, "X").setFontSize(50);
