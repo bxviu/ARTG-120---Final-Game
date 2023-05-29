@@ -47,10 +47,13 @@ class UI {
         //generates random number then adds mutation based on that number
         let rand = Math.floor(Math.random() * 10);
 
-        if(rand == 0 && array.indexOf("clearMuta")==-1){
-            array.push("clearMuta");
+        if(rand == 0){
             this.test = this.scene.add.image(100, 475, 'clearMuta');
             this.test.setScale(0.35);
+            if(array.length > 0){
+                array.splice(Math.floor(Math.random() * array.length), 1);
+                console.log("clear");
+            }
         }else if(rand == 1 && array.indexOf("diagonal")==-1){
             array.push("diagonal");
             this.test = this.scene.add.image(100, 475, 'diagonal');
