@@ -24,7 +24,7 @@ class Demo extends Phaser.Scene {
         this.load.image('upDown', 'updown.png');
         //action cards
         this.load.image('closer', 'closer.png');
-        this.load.image('excape', 'excape.png');
+        this.load.image('escape', 'escape.png');
         this.load.image('extraSpace', 'extraspace.png');
         this.load.image('jump8', 'jump8.png');
     }
