@@ -4,6 +4,7 @@ class UI {
         this.scene = scene;
         this.itemsText = this.scene.add.text(10, 10, "Items: ");
         this.action;
+        this.actionUsed = false;
     }
 
     updateItemsText() {
@@ -31,10 +32,14 @@ class UI {
             this.scene.events.emit("gainCard");
         }
         this.action.setInteractive();
+        this.actionUsed = false;
 
         //performs the action
         this.action.on('pointerdown', () => {
-            console.log("Action");
+            if(this.actionUsed == false){
+                console.log("Action");
+                this.actionUsed = true;
+            }
         })
     }
 
