@@ -48,6 +48,7 @@ class UI {
         let rand = Math.floor(Math.random() * 10);
 
         if(rand == 0){
+            //removes a random mutation
             this.test = this.scene.add.image(100, 475, 'clearMuta');
             this.test.setScale(0.35);
             if(array.length > 0){
