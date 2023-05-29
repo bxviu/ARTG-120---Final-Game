@@ -51,8 +51,10 @@ class Demo extends Phaser.Scene {
         this.displayCards = this.add.text(30, 360, "Mutation Cards", {color: "#ffffff"});
         this.displayCards.setInteractive();
         this.displayCards.on('pointerdown', () => {
-            this.scene.pause('examples');
-            this.scene.launch('display', g.players[0].mutations);
+            if(g.players[0].mutations.length > 0){
+                this.scene.pause('examples');
+                this.scene.launch('display', g.players[0].mutations);
+            }
         })
         // board.grid.destroy();
         // graphics.clear()
