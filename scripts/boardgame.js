@@ -156,6 +156,7 @@ class Game {
 
     nextTurn() {
         this.currentTurn = this.currentTurn + 1;
+        this.players[0].checkCards();
         // console.log(this.currentTurn);
         if (this.currentTurn > this.turn.length - 1) {
             this.currentTurn = 0;
@@ -186,8 +187,14 @@ class Game {
         // redraw entities
         this.players.forEach(player => {
             player.updateVisual();
+            player.showDetectionRadius();
         });
-        if (this.round % 4 == 0) {
+        let pco = this.board.tileXYZToChess(this.players[0].x, this.players[0].y, 0);
+        console.log(pco);
+        let mco = {x: this.monster.x, y: this.monster.y};//(this.monster.x, this.monster.y, 0);
+        // console.log(this.monster.x);
+        console.log(this.board.getDistance(pco,mco));
+        if (this.round % this.players[0].revealLocationRounds == 0 || this.board.getDistance(pco,mco) <= 3.5) {
             this.monster.updateVisual();
             // console.log("1")
         }

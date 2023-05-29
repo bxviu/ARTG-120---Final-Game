@@ -12,6 +12,8 @@ class Player extends Entity {
         let image = this.scene.add.rectangle(0, 0, 20, 20, 0xffffff).setOrigin(0.5);
         this.visual = this.scene.add.container(this.x, this.y, [image, text]).setDepth(1);
         this.possibleCoords = [];
+        this.revealLocationRounds = 4;
+        this.itemSpace = 2;
     }
 
     move(x, y) {
@@ -27,23 +29,23 @@ class Player extends Entity {
         this.possibleCoords = [];
         let hasMutation = false;
         // this.board.removeAllChess(true);
-
+        console.log(this.mutations);
         this.mutations.forEach(mutation => {
             if (mutation.name == "LShapeOnly") {
                 this.showSpacesL();
                 hasMutation = true;
             }
-            if (mutation.name == "diagonalOnly") {
+            if (mutation == "diagonal") {
                 this.showSpacesDiagonal();
                 hasMutation = true;
             }          
              
-            if (mutation.name == "leftOrRightOnly") {
+            if (mutation == "leftRight") {
                 this.showSpacesLeftRight();
                 hasMutation = true;
             }
 
-            if (mutation.name == "upOrDownOnly") {
+            if (mutation == "upDown") {
                 this.showSpacesUpDown();
                 hasMutation = true;
             }
@@ -55,8 +57,8 @@ class Player extends Entity {
     }
 
     showSpacesNormal() {
-        console.log(this.possibleCoords);
-        var resultTileXYArray = this.board.getTileXYAtDirection({x:this.x, y:this.y}, [0, 1, 2, 3, 4, 5, 6, 7], { end: 1 });
+        // console.log(this.possibleCoords);
+        let resultTileXYArray = this.board.getTileXYAtDirection({x:this.x, y:this.y}, [0, 1, 2, 3, 4, 5, 6, 7], { end: 1 });
         this.possibleCoords = [...this.possibleCoords, ...resultTileXYArray];
         this.showGivenSpaces();
     }
@@ -74,19 +76,19 @@ class Player extends Entity {
     }
 
     showSpacesDiagonal() {
-        var resultTileXYArray = this.board.getTileXYAtDirection({x:this.x, y:this.y}, [0, 1, 2, 3], { end: 1 });
+        let resultTileXYArray = this.board.getTileXYAtDirection({x:this.x, y:this.y}, [0, 1, 2, 3], { end: 1 });
         this.possibleCoords = [...this.possibleCoords, ...resultTileXYArray];
         this.showGivenSpaces();
     }
 
     showSpacesLeftRight() {
-        var resultTileXYArray = this.board.getTileXYAtDirection({x:this.x, y:this.y}, [5,7], { end: 1 });
+        let resultTileXYArray = this.board.getTileXYAtDirection({x:this.x, y:this.y}, [5,7], { end: 1 });
         this.possibleCoords = [...this.possibleCoords, ...resultTileXYArray];  
         this.showGivenSpaces();
     }
 
     showSpacesUpDown() {
-        var resultTileXYArray = this.board.getTileXYAtDirection({x:this.x, y:this.y}, [4, 6], { end: 1 });
+        let resultTileXYArray = this.board.getTileXYAtDirection({x:this.x, y:this.y}, [4, 6], { end: 1 });
         this.possibleCoords = [...this.possibleCoords, ...resultTileXYArray];  
         this.showGivenSpaces();
     }
@@ -103,10 +105,33 @@ class Player extends Entity {
                 // return;
             }
             
-            // this.board.removeChess(null, coord.x, coord.y, 0, true);
+            this.board.removeChess(null, coord.x, coord.y, -1, true);
             this.scene.rexBoard.add.shape(this.board, coord.x, coord.y, -1, COLOR_LIGHT).setScale(1);
-            this.board.tileXYZToChess(coord.x, coord.y, -1).fillAlpha = 0.5;
+            if (this.board.tileXYZToChess(coord.x, coord.y, -1)) {
+                this.board.tileXYZToChess(coord.x, coord.y, -1).fillAlpha = 0.5;
+            }
         });  
+    }
+
+    showDetectionRadius() {
+        let radius = 2;
+        let coordinates = [];
+
+        for (let i = -radius; i <= radius; i++) {
+            for (let j = -radius; j <= radius; j++) {
+                let x = this.x + i;
+                let y = this.y + j;
+                coordinates.push({ x: x, y: y });
+            }
+        }
+    
+        coordinates.forEach(coord => {
+            this.board.removeChess(null, coord.x, coord.y, -2, true);
+            this.scene.rexBoard.add.shape(this.board, coord.x, coord.y, -2, 0xED7014).setScale(1);
+            if (this.board.tileXYZToChess(coord.x, coord.y, -2)) {
+                this.board.tileXYZToChess(coord.x, coord.y, -2).fillAlpha = 0.15;
+            }
+        }); 
     }
 
     gainItem(item) {
@@ -118,23 +143,37 @@ class Player extends Entity {
     }
 
     checkCards() {
+        let roundRevealModified = false;
+        let itemSpaceModified = false;
         this.mutations.forEach(mutation => {
-            if (mutation.name == "revealEarly") {
-                
+            if (roundRevealModified) {return;}
+            if (itemSpaceModified) {return;}
+            if (mutation == "reveal2") {
+                this.revealLocationRounds = 2;
+                roundRevealModified = true;
             }
-            if (mutation.name == "revealLate") {
-                
+            if (mutation == "reveal6") {
+                this.revealLocationRounds = 6;
+                roundRevealModified = true;
             }
             if (mutation.name == "itemHoldingDecrease") {
-                
+                this.itemSpace = 1;
+                itemSpaceModified = true;
             }
             if (mutation.name == "itemHoldingIncrease") {
-                
+                this.itemSpace = 3;
+                itemSpaceModified = true;
             }
             if (mutation.name == "teleportEscape") {
                 
             }
         });
+        if (!roundRevealModified) {
+            this.revealLocationRounds = 4;
+        }
+        if (!itemSpaceModified) {
+            this.itemSpace = 2;
+        }
     }
 
 }
