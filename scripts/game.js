@@ -181,8 +181,8 @@ class Demo extends Phaser.Scene {
         // });
         
         console.log(this);
-        this.events.on("gainCard", (param) => {
-            this.ui.drawCard(param);
+        this.events.on("gainCard", () => {
+            this.ui.drawCard();
           });
 
         this.events.on("removeCard", () => {

@@ -161,15 +161,9 @@ class Game {
             this.currentTurn = 0;
             this.round = this.round + 1;
             // console.log(this.round);
-            let card = new Card("LShapeOnly", "L-Shape", "You Gain Hooves", "You can only move in\nan L shape like the\nhorse from chess.")
-            let card2 = new Card("leftOrRightOnly", "Diagonal", "Your legs grow protrusions in such a way that you can't move straight.", "You can only move diagonally.")
-            let card3 = new Card("upOrDownOnly", "Diagonal", "Your legs grow protrusions in such a way that you can't move straight.", "You can only move diagonally.")
-            let card4 = new Card("diagonalOnly", "Diagonal", "Your legs grow protrusions in such a way that you can't move straight.", "You can only move diagonally.")
             
             this.scene.events.emit("drawMutation", this.players[0].mutations);
-            console.log(this.players[0].mutations);
-            this.scene.events.emit("gainCard", card2);
-            console.log("Gain card");
+            this.scene.events.emit("gainCard");
         }
         if (this.turn[this.currentTurn] == -1) {
             this.monster.navigate();
