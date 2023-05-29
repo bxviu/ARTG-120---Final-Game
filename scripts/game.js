@@ -48,6 +48,7 @@ class Demo extends Phaser.Scene {
         g.initializeGame(1);
         this.ui = new UI(this, g);
 
+        //button for displaying the mutation cards ui
         this.displayCards = this.add.text(30, 360, "Mutation Cards", {color: "#ffffff"});
         this.displayCards.setInteractive();
         this.displayCards.on('pointerdown', () => {

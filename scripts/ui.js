@@ -15,6 +15,7 @@ class UI {
     }
 
     drawCard(card) {
+        //need to change
         this.scene.add.rectangle(700, 450, 150, 220, 0xaaff33).setOrigin(0.5);
         console.log(card.description);
         this.cardName = this.scene.add.text(700, 350, card.name, {color:"#000000"}).setOrigin(0.5);
@@ -23,6 +24,7 @@ class UI {
     }
 
     drawMutation(array){
+        //generates random number then adds mutation based on that number
         let rand = Math.floor(Math.random() * 10);
 
         if(rand == 0 && array.indexOf("clearMuta")==-1){
@@ -62,13 +64,16 @@ class UI {
             this.test = this.scene.add.image(100, 475, 'upDown');
             this.test.setScale(0.35);
         }else if(array.length >= 9){
+            //if all the mutations are taken already it does nothing
             console.log("Array full");
         }else{
+            //redraws it if it got a duplicate
             this.scene.events.emit("drawMutation", array);
         }
     }
 
     removeCard(){
+        //need to change
         this.cardLore.destroy();
         this.cardName.destroy();
         this.cardDes.destroy();
@@ -98,9 +103,13 @@ class Display extends Phaser.Scene{
         this.load.image('upDown', 'updown.png');
     }
     create(){
+        //used later to keep track of card number
         this.num = 1;
+        //displays what card they are looking at out of how many they have
         this.numText = this.add.text(360, 0, this.num+"/"+this.array.length).setFontSize(50);
+        //displays the first card
         this.currentCard = this.add.image(400, 290, this.array[0]).setScale(0.5);
+        //left arrow
         this.left = this.add.text(280, 290, "<", {color: "#00ff00"}).setFontSize(50);
         this.left.setInteractive();
         this.left.on('pointerdown', () => {
@@ -111,6 +120,7 @@ class Display extends Phaser.Scene{
                 this.currentCard = this.add.image(400, 290, this.array[this.num-1]).setScale(0.5);
             }
         })
+        //right arrow
         this.right = this.add.text(494, 290, ">", {color: "#00ff00"}).setFontSize(50);
         this.right.setInteractive();
         this.right.on('pointerdown', () => {
@@ -121,12 +131,12 @@ class Display extends Phaser.Scene{
                 this.currentCard = this.add.image(400, 290, this.array[this.num-1]).setScale(0.5);
             }
         })
+        //X to quit the ui
         this.leave = this.add.text(750, 0, "X").setFontSize(50);
         this.leave.setInteractive();
         this.leave.on('pointerdown', () => {
             this.scene.stop('display');
             this.scene.resume('examples');
         })
-        console.log(this.array);
     }
 }
