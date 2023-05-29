@@ -9,6 +9,8 @@ class Game {
         this.monster = null;
         this.recentPlayerId = -1;
         this.round = 0;
+        this.altarItems = [];
+        this.navigated = false;
     }
 
     createPlayer(x, y, items, cards) {
@@ -36,12 +38,6 @@ class Game {
         this.items.push(this.createItem(11, 4, 1, "Crowbar"));
         this.items.push(this.createItem(2, 3, 2, "Book"));
         this.items.push(this.createItem(1, 1, 3, "test"));
-        // this.players.forEach(player => {
-        //     this.scene.input.on('pointerdown', (event) => {
-        //         player.move(player.x+1, player.y+1);
-        //         console.log(event.x, event.y);
-        //     });
-        // });
         this.initializeBoard();
 
         this.updateBoard();
@@ -166,11 +162,20 @@ class Game {
             this.scene.events.emit("drawMutation", this.players[0].mutations);
             this.scene.events.emit("gainCard");
         }
-        if (this.turn[this.currentTurn] == -1) {
-            this.monster.navigate();
-            this.scene.time.delayedCall(500, () => {
-                this.players[0].showPossibleSpaces();
-                this.nextTurn();
+        if (this.turn[this.currentTurn] == -1 && !this.navigated) {
+            this.navigated = true;
+            this.scene.time.delayedCall(250, () => {
+                this.monster.navigate();
+                let escaped = this.monsterOverlaps();
+                let time = 350;
+                if (escaped) {
+                    time = 1550;
+                }
+                this.scene.time.delayedCall(time, () => {
+                    this.players[0].showPossibleSpaces();
+                    this.nextTurn();
+                    this.navigated = false;
+                });
             });
         }
     }
@@ -183,6 +188,7 @@ class Game {
         // check if player overlaps item
         this.itemOverlaps();
         this.playerOverlaps();
+        // this.monsterOverlaps();
 
         // redraw entities
         this.players.forEach(player => {
@@ -190,10 +196,10 @@ class Game {
             player.showDetectionRadius();
         });
         let pco = this.board.tileXYZToChess(this.players[0].x, this.players[0].y, 0);
-        console.log(pco);
-        let mco = {x: this.monster.x, y: this.monster.y};//(this.monster.x, this.monster.y, 0);
+        // console.log(pco);
+        let mco = {x: this.monster.x, y: this.monster.y};
         // console.log(this.monster.x);
-        console.log(this.board.getDistance(pco,mco));
+        // console.log(this.board.getDistance(pco,mco));
         if (this.round % this.players[0].revealLocationRounds == 0 || this.board.getDistance(pco,mco) <= 3.5) {
             this.monster.updateVisual();
             // console.log("1")
@@ -215,7 +221,7 @@ class Game {
 
     itemOverlaps() {
         this.items.forEach(item => {
-            if (!item.offBoard && item.x == this.players[0].x && item.y == this.players[0].y) {
+            if (!item.offBoard && this.players[0].itemSpace > this.players[0].items.length && item.x == this.players[0].x && item.y == this.players[0].y) {
                 console.log("overlap");
                 this.players[0].gainItem(item);
                 // this.board.removeChess(null, item.x, item.y, 0, true);
@@ -226,12 +232,35 @@ class Game {
     }
 
     playerOverlaps() {
-        if (this.players[0].items.length > 2 && ((this.players[0].x == 5 && this.players[0].y == 5) || (this.players[0].x == 5 && this.players[0].y == 6) || (this.players[0].x == 6 && this.players[0].y == 6) || (this.players[0].x == 6 && this.players[0].y == 5))) {
-            this.scene.add.text(500, 500, "You Win!", {color:"#FFFFFF"}).setOrigin(0.5);
-            console.log(this.players[0].items)
-            console.log("win");
+        if (((this.players[0].x == 5 && this.players[0].y == 5) || (this.players[0].x == 5 && this.players[0].y == 6) || (this.players[0].x == 6 && this.players[0].y == 6) || (this.players[0].x == 6 && this.players[0].y == 5))) {
+            if (this.altarItems.length < 4) {
+                console.log("altar");
+                this.altarItems.push(...this.players[0].items);
+                console.log(this.altarItems);
+                this.players[0].items = [];
+            }
+            else {
+                this.scene.add.text(500, 500, "You Win!", {color:"#FFFFFF"}).setOrigin(0.5);
+                console.log(this.players[0].items)
+                console.log("win");
+                this.scene.pause();
+            }
         }
     }
         
+    monsterOverlaps() {
+        if (this.players[0].x == this.monster.x && this.players[0].y == this.monster.y) {
+            if (this.players[0].mutations.find(mutation => mutation == "teleport") != undefined) {
+                this.players[0].teleportEscape();
+                return true;
+            }
+            else {
+                this.scene.add.text(500, 500, "You Died...", {color:"#FFFFFF"}).setOrigin(0.5);
+                console.log("lose");
+                this.scene.pause();
+            }
+        }
+        return false;
+    }
     
 }

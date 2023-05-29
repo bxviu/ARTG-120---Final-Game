@@ -33,11 +33,21 @@ class UI {
         }
         this.action.setInteractive();
         this.actionUsed = false;
-
+        let card = null;
+        if (rand == 0) {
+            card = "closer";
+        }else if (rand == 1) {
+            card = "escape";
+        }else if (rand == 2) {
+            card = "extraSpace";
+        }else {
+            card = "jump8";
+        }
         //performs the action
         this.action.on('pointerdown', () => {
             if(this.actionUsed == false){
                 console.log("Action");
+                this.scene.events.emit("action", card);
                 this.actionUsed = true;
             }
         })
@@ -54,6 +64,12 @@ class UI {
             if(array.length > 0){
                 array.splice(Math.floor(Math.random() * array.length), 1);
                 console.log("clear");
+                // for testing if teleport works, making sure it is always in the mutation array
+                // if (array.indexOf("teleport") == -1) {
+                //     array.push("teleport");
+                //     this.test = this.scene.add.image(100, 475, 'teleport');
+                //     this.test.setScale(0.35);
+                // }
             }
         }else if(rand == 1 && array.indexOf("diagonal")==-1){
             array.push("diagonal");

@@ -14,6 +14,20 @@ class Player extends Entity {
         this.possibleCoords = [];
         this.revealLocationRounds = 4;
         this.itemSpace = 2;
+        this.scene.events.on("action", (card) => {
+            if (card == "closer") {
+
+            }
+            else if (card == "escape") {
+
+            }
+            else if (card == "extraSpace") {
+                this.game.currentTurn = 0;
+            }
+            else if (card = "jump8") {
+                this.jump8();
+            }
+        });
     }
 
     move(x, y) {
@@ -142,6 +156,93 @@ class Player extends Entity {
         this.cards.push(card);
     }
 
+    teleportEscape() {
+        var centerX = this.x;
+        var centerY = this.y;
+        var distance = 7;
+        var coordinates = [];
+
+        for (var i = -distance; i <= distance; i++) {
+            for (var j = -distance; j <= distance; j++) {
+                var x = centerX + i;
+                var y = centerY + j;
+                var currentDistance = Math.abs(centerX - x) + Math.abs(centerY - y);
+    
+                if (currentDistance === distance) {
+                    coordinates.push({ x: x, y: y });
+                }
+            }
+        }
+
+        var randomIndex = Math.floor(Math.random() * coordinates.length);
+        while(!this.board.contains(coordinates[randomIndex].x, coordinates[randomIndex].y)) {
+            randomIndex = Math.floor(Math.random() * coordinates.length);
+        }
+        this.scene.rexBoard.add.shape(this.board, this.x, this.y, 2, COLOR_PRIMARY).setScale(1);
+
+        let ch = this.board.tileXYZToChess(this.x, this.y, 2);
+        this.scene.tweens.addCounter({
+            from: 1,
+            to: 2,
+            delay: 500,
+            ease: 'Linear',       // 'Cubic', 'Elastic', 'Bounce', 'Back'
+            duration: 500,
+            repeat: 0,            // -1: infinity
+            yoyo: false,
+            onComplete: () => {
+                this.move(coordinates[randomIndex].x, coordinates[randomIndex].y);
+                ch = this.board.tileXYZToChess(this.x, this.y, 2);
+                this.scene.tweens.addCounter({
+                    from: 2,
+                    to: 1,
+                    ease: 'Linear',       // 'Cubic', 'Elastic', 'Bounce', 'Back'
+                    duration: 500,
+                    repeat: 0,            // -1: infinity
+                    yoyo: false,
+                    onComplete: () => {
+                        this.board.removeChess(null, this.x, this.y, 2, true);
+                    },
+                    onUpdate(tween, targets, key, current, previous, param) {
+                        if (ch) {
+                            ch._scaleX = tween.getValue();
+                            ch._scaleY = tween.getValue();
+                        }
+                    }
+                    
+                });
+            },
+            onUpdate(tween, targets, key, current, previous, param) {
+                if (ch) {
+                    ch._scaleX = tween.getValue();
+                    ch._scaleY = tween.getValue();
+                }
+            } 
+        });
+        // this.move(coordinates[randomIndex].x, coordinates[randomIndex].y);
+    }
+
+    jump8() {
+        var centerX = this.x;
+        var centerY = this.y;
+        var distance = 8;
+        var coordinates = [];
+
+        for (var i = -distance; i <= distance; i++) {
+            for (var j = -distance; j <= distance; j++) {
+                var x = centerX + i;
+                var y = centerY + j;
+                var currentDistance = Math.abs(centerX - x) + Math.abs(centerY - y);
+    
+                if (currentDistance === distance) {
+                    coordinates.push({ x: x, y: y });
+                }
+            }
+        }
+
+        this.possibleCoords = [...this.possibleCoords, ...coordinates]; 
+        this.showGivenSpaces();
+    }
+
     checkCards() {
         let roundRevealModified = false;
         let itemSpaceModified = false;
@@ -156,16 +257,13 @@ class Player extends Entity {
                 this.revealLocationRounds = 6;
                 roundRevealModified = true;
             }
-            if (mutation.name == "itemHoldingDecrease") {
+            if (mutation == "itemHoldingDecrease") {
                 this.itemSpace = 1;
                 itemSpaceModified = true;
             }
-            if (mutation.name == "itemHoldingIncrease") {
+            if (mutation == "itemHoldingIncrease") {
                 this.itemSpace = 3;
                 itemSpaceModified = true;
-            }
-            if (mutation.name == "teleportEscape") {
-                
             }
         });
         if (!roundRevealModified) {
