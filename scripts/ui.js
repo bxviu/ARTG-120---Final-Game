@@ -98,16 +98,20 @@ class Display extends Phaser.Scene{
         this.load.image('upDown', 'updown.png');
     }
     create(){
+        this.num = 1;
+        this.numText = this.add.text(360, 0, this.num+"/"+this.array.length).setFontSize(50);
         this.test = this.add.image(400, 290, 'clearMuta');
         this.left = this.add.text(300, 290, "<", {color: "#00ff00"}).setFontSize(50);
         this.left.setInteractive();
         this.left.on('pointerdown', () => {
-
+            this.num--;
+            this.numText.setText(this.num+"/"+this.array.length);
         })
         this.right = this.add.text(470, 290, ">", {color: "#00ff00"}).setFontSize(50);
         this.right.setInteractive();
         this.right.on('pointerdown', () => {
-
+            this.num++;
+            this.numText.setText(this.num+"/"+this.array.length);
         })
         this.test.setScale(0.35);
         this.leave = this.add.text(750, 0, "X").setFontSize(50);
