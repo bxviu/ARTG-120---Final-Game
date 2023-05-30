@@ -18,6 +18,11 @@ class Monster extends Entity {
     navigate(players) {
         //Owen 5/25/2023 pass players so that the monster knows where the closest player is.
         let chanceToMove = 0.70;
+
+        if (Math.random() > chanceToMove) {
+            console.log("Monster chose not to move");
+            return
+        }
         
         let closestPlayer = -1
         let closestDistance = 50;
@@ -45,6 +50,8 @@ class Monster extends Entity {
 
         let pX = players[closestPlayer].x + fX;
         let pY = players[closestPlayer].y + fY;
+
+        console.log("Monster targeting: (" + pX + ", " + pY + ")");
         
         let dX = pX - this.x;
         let dY = pY - this.y;
@@ -69,12 +76,12 @@ class Monster extends Entity {
         }
 
         //Owen 5/26/2023 make the monster slower
-        if (Math.random() > chanceToMove) {
-            moveX = 0;
-            moveY = 0;
-        }
+        
+        let mX = this.x + moveX;
+        let mY = this.y + moveY;
+        console.log("Monster moving: (" + mX + ", " + mY + ")");
 
-        this.move(this.x + moveX, this.y + moveY);
+        this.move(mX, mY);
 
 
         //Owen 5/25/2023 commented out random move code

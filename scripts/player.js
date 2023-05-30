@@ -155,7 +155,9 @@ class Player extends Entity {
                 // return;
             }
             
-            this.board.removeChess(null, coord.x, coord.y, -1, true);
+            if (this.board.tileXYZToChess(coord.x, coord.y, -1)) {
+                this.board.removeChess(null, coord.x, coord.y, -1, true);
+            }
             this.scene.rexBoard.add.shape(this.board, coord.x, coord.y, -1, COLOR_LIGHT).setScale(1);
             if (this.board.tileXYZToChess(coord.x, coord.y, -1)) {
                 this.board.tileXYZToChess(coord.x, coord.y, -1).fillAlpha = 0.5;
