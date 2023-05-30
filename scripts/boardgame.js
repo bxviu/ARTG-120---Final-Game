@@ -179,7 +179,7 @@ class Game {
         if (this.turn[this.currentTurn] == -1 && !this.navigated) {
             this.navigated = true;
             this.scene.time.delayedCall(250, () => {
-                this.monster.navigate();
+                this.monster.navigate(this.players);
                 let escaped = this.monsterOverlaps();
                 let time = 350;
                 if (escaped) {

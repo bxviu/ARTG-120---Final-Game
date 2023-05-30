@@ -48,6 +48,7 @@ class Demo extends Phaser.Scene {
                 var points = board.getGridPoints(tileXY.x, tileXY.y, true);
                 graphics.strokePoints(points, true);
             }, this);
+        
 
         console.log(board);
         let g = new Game(this, board);
