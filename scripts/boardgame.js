@@ -257,7 +257,8 @@ class Game {
                 this.scene.add.text(500, 500, "You Win!", {color:"#FFFFFF"}).setOrigin(0.5);
                 console.log(this.players[0].items)
                 console.log("win");
-                this.scene.pause();
+                //Owen 5/29/2023 this isn't a function
+                //this.scene.pause();
             }
         }
     }
@@ -275,7 +276,8 @@ class Game {
             else {
                 this.scene.add.text(500, 500, "You Died...", {color:"#FFFFFF"}).setOrigin(0.5);
                 console.log("lose");
-                this.scene.pause();
+                //Owen 5/29/2023 this isn't a function
+                //this.scene.pause();
             }
         }
         return false;
