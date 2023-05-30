@@ -27,6 +27,7 @@ class Menu extends Phaser.Scene {
     }
 
     menuLeave(target, originalScene, nextScene, config) {
+        // animate the menu leaving
         this.tweens.add({
             targets: target,
             x: 3550,
@@ -39,8 +40,7 @@ class Menu extends Phaser.Scene {
             }   
         });
     }
-
-  }
+}
   
 class StartScreen extends Menu {
     constructor(){
@@ -79,6 +79,7 @@ class StartScreen extends Menu {
 
         wholeContainer.add([instructionsText]);
 
+        // clickable button to start the game
         let startBox = this.add.rexRoundRectangle(0, 175, 150, 100, 30, 0xffffaa, 1);
         startBox.postFX.addShadow(-1,1,0.02,1,0x000000,12,1);
         startBox.setInteractive();
@@ -107,7 +108,9 @@ class EndScreen extends Menu {
     constructor(){
         super("end");
     }
+
     init(data) {
+        // changes text on endscreen depending on whether you won or lost
         this.wonGame = data.wonGame;
     }
 
@@ -212,7 +215,8 @@ class ItemInfoScreen extends Menu {
         })
 
         wholeContainer.add([leave]);
-
+        
+        
         this.tweens.add({
             targets: wholeContainer,
             y: 300,

@@ -31,10 +31,10 @@ class Game {
         for (let player = 0; player < numPlayers; player++) {
             this.players.push(this.createPlayer(0+player*4, 0+player*2, [], []));     
             this.turn.push(this.players[player].id);
-            // console.log(this.players[player]);
         }
         this.monster = this.createMonster(11, 11, []);
         this.turn.push(-1);
+        // the items
         this.items.push(this.createItem(6, 9, 0, "Salt"));
         this.items.push(this.createItem(11, 4, 1, "Crowbar"));
         this.items.push(this.createItem(2, 3, 2, "Book"));
@@ -56,7 +56,8 @@ class Game {
             if (!this.board.contains(tileXY.x, tileXY.y)) {
                 return;
             }
-
+            // if it is the player's turn, check if the player allowed to move to the tile
+            // move player there if valid space
             this.players.forEach(player => {
                 if (this.turn[this.currentTurn] == player.id) {
                     // console.log(tileXY)
@@ -78,7 +79,8 @@ class Game {
             });
         })
         .on('tileover', (pointer, tileXY) => {
-            // console.log(this.rexBoard);
+            // if it is the player's turn, change opacity of tiles that player allowed to move to,
+            // to a more opaque value, only if mouse goes over the tile
             this.players.forEach(player => {
                 if (this.turn[this.currentTurn] == player.id) {
                     let validSpace = false;
@@ -120,6 +122,8 @@ class Game {
             //     // tween.destroy();
             // });
             this.players.forEach(player => {
+                // if it is the player's turn, change opacity of tiles that player allowed to move to,
+                // back to normal, only if mouse goes off the tile
                 if (this.turn[this.currentTurn] == player.id) {
                     let validSpace = false;
                     player.possibleCoords.forEach(coord => {
@@ -157,6 +161,9 @@ class Game {
             this.currentTurn = this.currentTurn + 1;
         }
         else {
+            // this is from the action card effect of moving an extra space
+            // sets the turn back to the player and shows spaces again with
+            // a delay
             this.currentTurn = -999;
             this.scene.time.delayedCall(150, () => {
                 this.currentTurn = 0;
@@ -171,16 +178,22 @@ class Game {
             this.round = this.round + 1;
             // console.log(this.round);
             
+            // player gains a mutation every round
             this.scene.events.emit("drawMutation", {muta: this.players[0].mutations, giveUpCount: 0});
+            // player gains an action card every 2 rounds
             if (this.round % 2 == 0) {
                 this.scene.events.emit("gainCard");
             }
         }
+        // monster movement
         if (this.turn[this.currentTurn] == -1 && !this.navigated) {
             this.navigated = true;
             this.scene.time.delayedCall(250, () => {
                 this.monster.navigate(this.players);
+                // check if monster is overlapping player and whether they have an escape options
                 let escaped = this.monsterOverlaps();
+                // modify the delayed call time depending on if player is caught (an animation plays if they 
+                // are caught, so the time is longer)
                 let time = 350;
                 if (escaped) {
                     time = 1550;
@@ -199,7 +212,7 @@ class Game {
         // clear everything
         this.board.removeAllChess(true);
 
-        // check if player overlaps item
+        // check if entities overlap
         this.itemOverlaps();
         this.playerOverlaps();
         // this.monsterOverlaps();
@@ -215,6 +228,7 @@ class Game {
         // console.log(this.monster.x);
         // console.log(this.board.getDistance(pco,mco));
         if (this.round % this.players[0].revealLocationRounds == 0 || this.board.getDistance(pco,mco) <= 3.5) {
+            // show monster location if enough rounds have passed or the monster is close to the player
             this.monster.updateVisual();
             // console.log("1")
         }
@@ -234,6 +248,8 @@ class Game {
      }
 
     itemOverlaps() {
+        // check all items if player is the same coordinate
+        // only adds item to inventory if player has enough space
         this.items.forEach(item => {
             if (!item.offBoard && this.players[0].itemSpace > this.players[0].items.length && item.x == this.players[0].x && item.y == this.players[0].y) {
                 console.log("overlap");
@@ -247,6 +263,9 @@ class Game {
     }
 
     playerOverlaps() {
+        // checking if player is in the coordinates for the altar
+        // if they have items, give it to the altar
+        // if the altar has all the items, win the game
         if (((this.players[0].x == 5 && this.players[0].y == 5) || (this.players[0].x == 5 && this.players[0].y == 6) || (this.players[0].x == 6 && this.players[0].y == 6) || (this.players[0].x == 6 && this.players[0].y == 5))) {
             if (this.altarItems.length < 5) {
                 console.log("altar");
@@ -266,6 +285,7 @@ class Game {
     }
         
     monsterOverlaps() {
+        // see if player has escacpe options and use them, if not player dies
         if (this.players[0].x == this.monster.x && this.players[0].y == this.monster.y) {
             if (this.players[0].mutations.find(mutation => mutation == "teleport") != undefined) {
                 this.players[0].teleportEscape(7);

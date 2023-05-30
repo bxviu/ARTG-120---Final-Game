@@ -6,8 +6,6 @@ class Player extends Entity {
         this.items = items || [];
         this.cards = cards || [];
         this.actionCard = "none";
-        // let card = new Card("LShapeOnly", "L-Shape", "You Gain Hooves", "You can only move in an L shape like the horse from chess.")
-        // let card2 = new Card("diagonalOnly", "Diagonal", "Your legs grow protrusions in such a way that you can't move straight.", "You can only move diagonally.")
         this.mutations = [];
         let text = this.scene.add.text(0, 0, "P" + this.id, {color:COLOR_DARK}).setOrigin(0.5);
         let image = this.scene.add.rectangle(0, 0, 20, 20, 0xffffff).setOrigin(0.5);
@@ -19,25 +17,9 @@ class Player extends Entity {
         this.scene.events.on("action", (card) => {
             this.actionCard = card;
             if (card == "closer") {
-                let randomItem = this.game.items[Math.floor(Math.random() * this.game.items.length)];
-                // let moveX = 0;
-                // let moveY = 0;
-                // if (this.x < randomItem.x) {
-                //     moveX = -1;
-                // }
-                // else {
-                //     moveX = 1;
-                // }
-                // if (this.y < randomItem.y) {
-                //     moveY = -1;
-                // }
-                // else {
-                //     moveY = 1;
-                // }
-                // this.game.items[0].move(randomItem.x +moveX, randomItem.y + moveY);
-                // this.game.items[0].updateVisual();
 
-                // console.log(randomItem);
+                // moves a random item closer to the player
+                let randomItem = this.game.items[Math.floor(Math.random() * this.game.items.length)];
                 var ABVector = {x: this.x - randomItem.x, y: this.y - randomItem.y};
 
                 // Normalize the ABVector
@@ -78,7 +60,6 @@ class Player extends Entity {
     showPossibleSpaces() {        
         this.possibleCoords = [];
         let hasMutation = false;
-        // this.board.removeAllChess(true);
         console.log(this.mutations);
         this.mutations.forEach(mutation => {
             if (mutation.name == "LShapeOnly") {
@@ -114,6 +95,7 @@ class Player extends Entity {
     }
 
     showSpacesL() {
+        // coordinates in an L shape around the player
         this.possibleCoords = [...this.possibleCoords, {x:this.x+2, y:this.y+1},
             {x:this.x+2, y:this.y-1}, 
             {x:this.x+1, y:this.y-2}, 
@@ -122,6 +104,7 @@ class Player extends Entity {
             {x:this.x-2, y:this.y-1}, 
             {x:this.x-1, y:this.y+2}, 
             {x:this.x+1, y:this.y+2}];  
+        // since these mutations can stack, append the new coordinates to the existing ones
         this.showGivenSpaces();
     }
 
@@ -145,17 +128,9 @@ class Player extends Entity {
 
     showGivenSpaces() {         
         this.possibleCoords.forEach(coord => {
-            // if (!this.board.contains(coord.x, coord.y)) {
-            //     return;
-            // }
-            if (this.game.monster.x == coord.x && this.game.monster.y == coord.y) {
-                // return;
-            }
-            if (this.game.items.find(item => !item.offBoard && item.x == coord.x && item.y == coord.y)) {
-                // return;
-            }
-            
+
             if (this.board.tileXYZToChess(coord.x, coord.y, -1)) {
+                // remove existing tile if it exists to avoid visual glitch of adding on top of it
                 this.board.removeChess(null, coord.x, coord.y, -1, true);
             }
             this.scene.rexBoard.add.shape(this.board, coord.x, coord.y, -1, COLOR_LIGHT).setScale(1);
@@ -166,6 +141,7 @@ class Player extends Entity {
     }
 
     showDetectionRadius() {
+        // radius where player can see the monster no matter what
         let radius = 2;
         let coordinates = [];
 
@@ -195,6 +171,7 @@ class Player extends Entity {
     }
 
     teleportEscape(distance) {
+        // gets a random location a certain distance away from the player and moves the player there
         var centerX = this.x;
         var centerY = this.y;
         var distance = distance;
@@ -260,6 +237,7 @@ class Player extends Entity {
     }
 
     jump8() {
+        // gets spots 8 spaces away from the player and adds them to the possibleCoords array for them to possibly use
         var centerX = this.x;
         var centerY = this.y;
         var distance = 8;

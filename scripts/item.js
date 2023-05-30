@@ -7,15 +7,8 @@ class Item extends Entity {
         this.name = name;
     }
 
-    // updateVisual() {    
-    //     // console.log(this);
-    //     if (!this.offBoard) {   
-    //         let chess = this.board.tileXYToWorldXY(this.x, this.y);
-    //         this.visual.setPosition(chess.x, chess.y);
-    //         // }
-    //     }
-    // }
     showInfo() {
+        // the lore box that pops up
         this.scene.scene.launch('iteminfo', {item: this});
     }
 
