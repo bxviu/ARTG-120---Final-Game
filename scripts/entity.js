@@ -28,4 +28,23 @@ class Entity {
             this.visual.setPosition(chess.x, chess.y);
         }
     }
+
+    die() {  
+        let chess = this.board.tileXYZToChess(this.x, this.y, 0);
+        if (chess) {
+            this.scene.tweens.addCounter({
+                from: 1,
+                to: 0,
+                ease: 'Linear',       // 'Cubic', 'Elastic', 'Bounce', 'Back'
+                duration: 1000,
+                repeat: 0,            // -1: infinity
+                yoyo: false,
+                onUpdate(tween, targets, key, current, previous, param) {
+                    // var value = current;
+                    // var value = tween.getValue();
+                    chess.fillAlpha = tween.getValue();
+                }
+            });
+        }
+    }
 }

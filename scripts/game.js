@@ -236,7 +236,7 @@ var config = {
         mode: Phaser.Scale.FIT,
         autoCenter: Phaser.Scale.CENTER_BOTH,
     },
-    scene: [Demo, Display]
+    scene: [StartScreen, Demo, Display, EndScreen]
 };
 
 var game = new Phaser.Game(config);

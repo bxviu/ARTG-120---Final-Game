@@ -171,10 +171,10 @@ class Game {
             this.round = this.round + 1;
             // console.log(this.round);
             
-            this.scene.events.emit("drawMutation", this.players[0].mutations);
-            // if (this.round % 2 == 0) {
-            this.scene.events.emit("gainCard");
-            // }
+            this.scene.events.emit("drawMutation", {muta: this.players[0].mutations, giveUpCount: 0});
+            if (this.round % 2 == 0) {
+                this.scene.events.emit("gainCard");
+            }
         }
         if (this.turn[this.currentTurn] == -1 && !this.navigated) {
             this.navigated = true;
@@ -254,10 +254,12 @@ class Game {
                 this.players[0].items = [];
             }
             else {
+                this.monster.die();
                 this.scene.add.text(500, 500, "You Win!", {color:"#FFFFFF"}).setOrigin(0.5);
-                console.log(this.players[0].items)
-                console.log("win");
-                this.scene.pause();
+                console.log("win");                
+                this.scene.time.delayedCall(1250, () => {
+                    this.scene.scene.start("end", {wonGame:true});
+                });
             }
         }
     }
@@ -266,16 +268,21 @@ class Game {
         if (this.players[0].x == this.monster.x && this.players[0].y == this.monster.y) {
             if (this.players[0].mutations.find(mutation => mutation == "teleport") != undefined) {
                 this.players[0].teleportEscape(7);
+                this.players[0].mutations.splice(this.players[0].mutations.findIndex(object => {
+                    return object == "teleport";
+                  }), 1);
                 return true;
             }
-            if (this.players[0].actionCard == "escape") {
+            if (this.players[0].secondChance) {
                 this.players[0].teleportEscape(3);
                 return true;
             }
             else {
+                this.players[0].die();
                 this.scene.add.text(500, 500, "You Died...", {color:"#FFFFFF"}).setOrigin(0.5);
-                console.log("lose");
-                this.scene.pause();
+                this.scene.time.delayedCall(1250, () => {
+                    this.scene.scene.start("end", {wonGame:false});
+                });
             }
         }
         return false;

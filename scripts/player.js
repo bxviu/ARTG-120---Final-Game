@@ -6,8 +6,8 @@ class Player extends Entity {
         this.items = items || [];
         this.cards = cards || [];
         this.actionCard = "none";
-        let card = new Card("LShapeOnly", "L-Shape", "You Gain Hooves", "You can only move in an L shape like the horse from chess.")
-        let card2 = new Card("diagonalOnly", "Diagonal", "Your legs grow protrusions in such a way that you can't move straight.", "You can only move diagonally.")
+        // let card = new Card("LShapeOnly", "L-Shape", "You Gain Hooves", "You can only move in an L shape like the horse from chess.")
+        // let card2 = new Card("diagonalOnly", "Diagonal", "Your legs grow protrusions in such a way that you can't move straight.", "You can only move diagonally.")
         this.mutations = [];
         let text = this.scene.add.text(0, 0, "P" + this.id, {color:COLOR_DARK}).setOrigin(0.5);
         let image = this.scene.add.rectangle(0, 0, 20, 20, 0xffffff).setOrigin(0.5);
@@ -15,6 +15,7 @@ class Player extends Entity {
         this.possibleCoords = [];
         this.revealLocationRounds = 4;
         this.itemSpace = 2;
+        this.secondChance = false;
         this.scene.events.on("action", (card) => {
             this.actionCard = card;
             if (card == "closer") {
@@ -51,6 +52,7 @@ class Player extends Entity {
                 // this.game.updateBoard();
             }
             else if (card == "escape") {
+                this.secondChance = true;
             }
             else if (card == "extraSpace") {
                 this.game.extraTurn = true;
