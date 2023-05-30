@@ -15,8 +15,12 @@ class Menu extends Phaser.Scene {
     }
 
     closeMenu(originalScene,nextScene,config) {
-        this.scene.stop('SummaryScene');
+        if (config.resume == true) {
+            this.scene.resume('examples');
+        }
+        else {
         this.scene.start(nextScene, config);
+        }
         if (nextScene != originalScene) {
             this.scene.stop(originalScene);
         }
@@ -148,5 +152,73 @@ class EndScreen extends Menu {
                 });
             }
         });
+    }
+}
+
+class ItemInfoScreen extends Menu {
+    constructor(){
+        super('iteminfo');
+    }
+    init(item){
+        this.item = item.item;
+    }
+    
+    preload() {
+    }
+    create(){
+        let wholeContainer = this.add.container(400, -1000);
+        let entireBox = this.add.rexRoundRectangle(0, 0, 700, 500, 30, 0x99b0af, 1);
+        entireBox.postFX.addShadow(-1,1,0.02,1,0x000000,12,1);
+
+        wholeContainer.add([entireBox]);
+        
+        let title = this.add.text(0, -190, this.item.name, {font: "50px Arial", fill: "#000000"});
+        title.setOrigin(0.5);
+
+        wholeContainer.add([title]);
+
+        let text = "";
+        if (this.item.name == "Salt") {
+            text = "Salt lore";
+        }
+        else if (this.item.name == "Crowbar") {
+            text = "Crowbar lore";
+        }
+        else if (this.item.name == "Book") {
+            text = "Book lore";
+        }
+        else if (this.item.name == "Torch") {
+            text = "Torch lore";
+        }
+        else if (this.item.name == "Cross") {
+            text = "Cross lore";
+        }
+        else {
+            text = "unknown item";
+        }
+        let itemText = this.add.text(0, 0, text,
+                                            {font: "50px Arial", fill: "#000000", wordWrap: { width: 600, useAdvancedWrap: true }});
+        itemText.setOrigin(0.5);
+
+        wholeContainer.add([itemText]);
+
+        //X to quit the ui
+        let leave = this.add.text(350, -290, "X").setFontSize(50);
+        leave.setInteractive();
+        leave.on('pointerdown', () => {
+            this.menuLeave(wholeContainer, "iteminfo", "examples", {resume:true});
+            this.scene.stop('iteminfo');
+            // this.scene.resume('examples');
+        })
+
+        wholeContainer.add([leave]);
+
+        this.tweens.add({
+            targets: wholeContainer,
+            y: 300,
+            duration: 500,
+            ease: 'Cubic.out',
+        });
+
     }
 }

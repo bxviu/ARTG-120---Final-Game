@@ -15,6 +15,9 @@ class Item extends Entity {
     //         // }
     //     }
     // }
+    showInfo() {
+        this.scene.scene.launch('iteminfo', {item: this});
+    }
 
     removeItemfromBoard() {
         while (this.board.contains(this.x, this.y, 0)) {

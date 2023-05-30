@@ -238,6 +238,7 @@ class Game {
             if (!item.offBoard && this.players[0].itemSpace > this.players[0].items.length && item.x == this.players[0].x && item.y == this.players[0].y) {
                 console.log("overlap");
                 this.players[0].gainItem(item);
+                item.showInfo();
                 // this.board.removeChess(null, item.x, item.y, 0, true);
                 this.items.splice(this.items.indexOf(item), 1);
                 item.removeItemfromBoard();
