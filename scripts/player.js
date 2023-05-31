@@ -16,8 +16,8 @@ class Player extends Entity {
         this.secondChance = false;
         this.scene.events.on("action", (card) => {
             this.actionCard = card;
+            console.log(card);
             if (card == "closer") {
-
                 // moves a random item closer to the player
                 let randomItem = this.game.items[Math.floor(Math.random() * this.game.items.length)];
                 var ABVector = {x: this.x - randomItem.x, y: this.y - randomItem.y};
@@ -60,9 +60,9 @@ class Player extends Entity {
     showPossibleSpaces() {        
         this.possibleCoords = [];
         let hasMutation = false;
-        console.log(this.mutations);
+        // console.log(this.mutations);
         this.mutations.forEach(mutation => {
-            if (mutation.name == "LShapeOnly") {
+            if (mutation.name == "lshape") {
                 this.showSpacesL();
                 hasMutation = true;
             }

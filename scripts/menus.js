@@ -151,6 +151,7 @@ class EndScreen extends Menu {
             ease: 'Cubic.out',
             onComplete: () => {
                 startBox.on('pointerdown', () => {
+                    this.scene.stop('examples');
                     this.menuLeave(wholeContainer, "end", "start", {});    
                 });
             }

@@ -179,7 +179,7 @@ class Game {
             // console.log(this.round);
             
             // player gains a mutation every round
-            this.scene.events.emit("drawMutation", {muta: this.players[0].mutations, giveUpCount: 0});
+            this.scene.events.emit("drawMutation", this.players[0].mutations);
             // player gains an action card every 2 rounds
             if (this.round % 2 == 0) {
                 this.scene.events.emit("gainCard");

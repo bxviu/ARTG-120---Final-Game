@@ -11,7 +11,8 @@ class Entity {
     }
 
     move(x, y) {
-        if (this.board.contains(this.x, this.y, 0)) {
+        console.log(this.board);
+        if (this.board.contains(this.x, this.y, 0) != undefined) {
             this.board.removeChess(null, this.x, this.y, 0, true);
         }
         this.x = x;

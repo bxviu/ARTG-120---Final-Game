@@ -49,6 +49,13 @@ class Demo extends Phaser.Scene {
                 graphics.strokePoints(points, true);
             }, this);
         
+        // this is to deal with having multiple event listeners when replaying
+        // they cause errors if they stay
+        this.events.removeListener("gainCard");
+        this.events.removeListener("removeCard");
+        this.events.removeListener("drawMutation");
+        // action listener made in player constructor, which is called in g.initializeGame
+        this.events.removeListener("action");
 
         console.log(board);
         let g = new Game(this, board);
@@ -64,7 +71,7 @@ class Demo extends Phaser.Scene {
                 this.scene.launch('display', g.players[0].mutations);
             }
         })
-        
+    
         console.log(this);
         this.events.on("gainCard", () => {
             this.ui.drawCard();

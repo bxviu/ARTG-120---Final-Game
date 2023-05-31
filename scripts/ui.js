@@ -58,15 +58,9 @@ class UI {
     }
 
     drawMutation(array){
-        // there seems to be a bug where clear is called repeatedly, so i am doing a bandaid fix to stop it before it hits the recursion depth limit
-        if (array.giveUpCount > 5) {
-            return;
-        }
-        // just saving this value, it gets deleted in array = array.muta (i do this so i dont need to change the code below)
-        let giveUpCount = array.giveUpCount;
         //generates random number then adds mutation based on that number
         let rand = Math.floor(Math.random() * 10);
-        array = array.muta;
+
         if(rand == 0){
             //removes a random mutation
             this.test = this.scene.add.image(100, 475, 'clearMuta');
@@ -74,12 +68,6 @@ class UI {
             if(array.length > 0){
                 array.splice(Math.floor(Math.random() * array.length), 1);
                 console.log("clear");
-                // for testing if teleport works, making sure it is always in the mutation array
-                // if (array.indexOf("teleport") == -1) {
-                //     array.push("teleport");
-                //     this.test = this.scene.add.image(100, 475, 'teleport');
-                //     this.test.setScale(0.35);
-                // }
             }
         }else if(rand == 1 && array.indexOf("diagonal")==-1){
             array.push("diagonal");
@@ -118,7 +106,7 @@ class UI {
             console.log("Array full");
         }else{
             //redraws it if it got a duplicate
-            this.scene.events.emit("drawMutation", {muta: array, giveUpCount: giveUpCount + 1});
+            this.scene.events.emit("drawMutation", array);
         }
     }
 
