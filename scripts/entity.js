@@ -11,20 +11,24 @@ class Entity {
     }
 
     move(x, y) {
-        console.log(this.board);
-        if (this.board.contains(this.x, this.y, 0) != undefined) {
+        if (this.board.contains(this.x, this.y, 0)) {
             this.board.removeChess(null, this.x, this.y, 0, true);
         }
         this.x = x;
         this.y = y;
     }
 
-    updateVisual() {    
+    updateVisual(color) {    
         if (this.board.contains(this.x, this.y, 0)) {
             // remove existing tile to avoid visual errors that come from adding another tile to it
             this.board.removeChess(null, this.x, this.y, 0, true);
         }
-        this.scene.rexBoard.add.shape(this.board, this.x, this.y, 0, COLOR_PRIMARY).setScale(0.7);        
+        if (color) {
+            this.scene.rexBoard.add.shape(this.board, this.x, this.y, 0, color).setScale(0.7);       
+        }
+        else {
+            this.scene.rexBoard.add.shape(this.board, this.x, this.y, 0, COLOR_PRIMARY).setScale(0.7);       
+        } 
         let chess = this.board.tileXYZToChess(this.x, this.y, 0);
         if (this.visual) {
             this.visual.setPosition(chess.x, chess.y);

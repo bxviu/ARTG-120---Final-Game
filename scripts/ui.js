@@ -5,6 +5,7 @@ class UI {
         this.itemsText = this.scene.add.text(10, 10, "Items: ");
         this.action;
         this.actionUsed = false;
+        this.mutationCardVisual = null;
     }
 
     updateItemsText() {
@@ -57,57 +58,69 @@ class UI {
         })
     }
 
-    drawMutation(array){
-        //generates random number then adds mutation based on that number
-        let rand = Math.floor(Math.random() * 10);
+    // drawMutation(array){
+    //     // if (this.mutationCardVisual) {
+    //     //     this.mutationCardVisual.destroy();
+    //     // }
+    //     //generates random number then adds mutation based on that number
+    //     let rand = Math.floor(Math.random() * 10);
 
-        if(rand == 0){
-            //removes a random mutation
-            this.test = this.scene.add.image(100, 475, 'clearMuta');
-            this.test.setScale(0.35);
-            if(array.length > 0){
-                array.splice(Math.floor(Math.random() * array.length), 1);
-                console.log("clear");
-            }
-        }else if(rand == 1 && array.indexOf("diagonal")==-1){
-            array.push("diagonal");
-            this.test = this.scene.add.image(100, 475, 'diagonal');
-            this.test.setScale(0.35);
-        }else if(rand == 2 && array.indexOf("extraItem")==-1){
-            array.push("extraItem");
-            this.test = this.scene.add.image(100, 475, 'extraItem');
-            this.test.setScale(0.35);
-        }else if(rand == 3 && array.indexOf("leftRight")==-1){
-            array.push("leftRight");
-            this.test = this.scene.add.image(100, 475, 'leftRight');
-            this.test.setScale(0.35);
-        }else if(rand == 4 && array.indexOf("oneItem")==-1){
-            array.push("oneItem");
-            this.test = this.scene.add.image(100, 475, 'oneItem');
-            this.test.setScale(0.35);
-        }else if(rand == 5 && array.indexOf("reveal2")==-1){
-            array.push("reveal2");
-            this.test = this.scene.add.image(100, 475, 'reveal2');
-            this.test.setScale(0.35);
-        }else if(rand == 6 && array.indexOf("reveal6")==-1){
-            array.push("reveal6");
-            this.test = this.scene.add.image(100, 475, 'reveal6');
-            this.test.setScale(0.35);
-        }else if(rand == 7 && array.indexOf("teleport")==-1){
-            array.push("teleport");
-            this.test = this.scene.add.image(100, 475, 'teleport');
-            this.test.setScale(0.35);
-        }else if(rand == 8 && array.indexOf("upDown")==-1){
-            array.push("upDown");
-            this.test = this.scene.add.image(100, 475, 'upDown');
-            this.test.setScale(0.35);
-        }else if(array.length >= 9){
-            //if all the mutations are taken already it does nothing
-            console.log("Array full");
-        }else{
-            //redraws it if it got a duplicate
-            this.scene.events.emit("drawMutation", array);
+    //     if(rand == 0){
+    //         //removes a random mutation
+    //         this.test = this.scene.add.image(100, 475, 'clearMuta');
+    //         this.test.setScale(0.35);
+    //         if(array.length > 0){
+    //             array.splice(Math.floor(Math.random() * array.length), 1);
+    //             console.log("clear");
+    //         }
+    //     }else if(rand == 1 && array.indexOf("diagonal")==-1){
+    //         array.push("diagonal");
+    //         this.test = this.scene.add.image(100, 475, 'diagonal');
+    //         this.test.setScale(0.35);
+    //     }else if(rand == 2 && array.indexOf("extraItem")==-1){
+    //         array.push("extraItem");
+    //         this.test = this.scene.add.image(100, 475, 'extraItem');
+    //         this.test.setScale(0.35);
+    //     }else if(rand == 3 && array.indexOf("leftRight")==-1){
+    //         array.push("leftRight");
+    //         this.test = this.scene.add.image(100, 475, 'leftRight');
+    //         this.test.setScale(0.35);
+    //     }else if(rand == 4 && array.indexOf("oneItem")==-1){
+    //         array.push("oneItem");
+    //         this.test = this.scene.add.image(100, 475, 'oneItem');
+    //         this.test.setScale(0.35);
+    //     }else if(rand == 5 && array.indexOf("reveal2")==-1){
+    //         array.push("reveal2");
+    //         this.test = this.scene.add.image(100, 475, 'reveal2');
+    //         this.test.setScale(0.35);
+    //     }else if(rand == 6 && array.indexOf("reveal6")==-1){
+    //         array.push("reveal6");
+    //         this.test = this.scene.add.image(100, 475, 'reveal6');
+    //         this.test.setScale(0.35);
+    //     }else if(rand == 7 && array.indexOf("teleport")==-1){
+    //         array.push("teleport");
+    //         this.test = this.scene.add.image(100, 475, 'teleport');
+    //         this.test.setScale(0.35);
+    //     }else if(rand == 8 && array.indexOf("upDown")==-1){
+    //         array.push("upDown");
+    //         this.test = this.scene.add.image(100, 475, 'upDown');
+    //         this.test.setScale(0.35);
+    //     }else if(array.length >= 9){
+    //         //if all the mutations are taken already it does nothing
+    //         console.log("Array full");
+    //     }else{
+    //         //redraws it if it got a duplicate
+    //         this.scene.events.emit("drawMutation", array);
+    //     }
+    //     // this.mutationCardVisual = this.test;
+    // }
+
+    drawMutation(array){
+        if (this.mutationCardVisual) {
+            this.mutationCardVisual.destroy();
         }
+
+        this.mutationCardVisual = CardMutator.mutate(this.scene, array);
     }
 
     removeCard(){

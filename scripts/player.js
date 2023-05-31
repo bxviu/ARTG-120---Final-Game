@@ -35,6 +35,7 @@ class Player extends Entity {
             }
             else if (card == "escape") {
                 this.secondChance = true;
+                this.addSecondChanceVisual();
             }
             else if (card == "extraSpace") {
                 this.game.extraTurn = true;
@@ -62,7 +63,7 @@ class Player extends Entity {
         let hasMutation = false;
         // console.log(this.mutations);
         this.mutations.forEach(mutation => {
-            if (mutation.name == "lshape") {
+            if (mutation == "lShape") {
                 this.showSpacesL();
                 hasMutation = true;
             }
@@ -70,17 +71,14 @@ class Player extends Entity {
                 this.showSpacesDiagonal();
                 hasMutation = true;
             }          
-             
             if (mutation == "leftRight") {
                 this.showSpacesLeftRight();
                 hasMutation = true;
             }
-
             if (mutation == "upDown") {
                 this.showSpacesUpDown();
                 hasMutation = true;
             }
-
         });
         if (!hasMutation) {
             this.showSpacesNormal();
@@ -216,6 +214,9 @@ class Player extends Entity {
                     yoyo: false,
                     onComplete: () => {
                         this.board.removeChess(null, this.x, this.y, 2, true);
+                        if (this.secondChance) {
+                            this.secondChance = false;
+                        }
                     },
                     onUpdate(tween, targets, key, current, previous, param) {
                         if (ch) {
@@ -273,11 +274,25 @@ class Player extends Entity {
                 this.revealLocationRounds = 6;
                 roundRevealModified = true;
             }
-            if (mutation == "itemHoldingDecrease") {
+            if (mutation == "oneItem") {
                 this.itemSpace = 1;
+                let droppedItem = null;
+                let droppedX = 0;
+                let droppedY = 0;
+                while (this.items.length > 1) {
+                    droppedItem = this.items.pop();
+                    while ((droppedX == 0 && droppedY == 0) || this.board.contains(this.x + droppedX, this.x + droppedY, 0)) {
+                        droppedX = Math.floor(Math.random() * 3) - 1;
+                        droppedY = Math.floor(Math.random() * 3) - 1;
+                    }
+                    console.log(this.x + droppedX, this.y + droppedY, droppedItem.id, droppedItem.name);
+                    this.game.items.push(this.game.createItem(this.x + droppedX, this.y + droppedY, droppedItem.id, droppedItem.name));
+                    this.game.items[this.game.items.length - 1].updateVisual();
+                }
+                
                 itemSpaceModified = true;
             }
-            if (mutation == "itemHoldingIncrease") {
+            if (mutation == "extraItem") {
                 this.itemSpace = 3;
                 itemSpaceModified = true;
             }
@@ -287,6 +302,18 @@ class Player extends Entity {
         }
         if (!itemSpaceModified) {
             this.itemSpace = 2;
+        }
+        if (this.secondChance) {
+            this.addSecondChanceVisual();
+        }
+    }
+
+    addSecondChanceVisual() {
+        // this.updateVisual(0x009900);
+        this.board.removeChess(null, this.x, this.y, 1, true);
+        this.scene.rexBoard.add.shape(this.board, this.x, this.y, 1, 0x009900).setScale(1);
+        if (this.board.tileXYZToChess(this.x, this.y, 1)) {
+            this.board.tileXYZToChess(this.x, this.y, 1).fillAlpha = 0.35;
         }
     }
 
