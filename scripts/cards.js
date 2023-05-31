@@ -1,4 +1,4 @@
-const movementCards = 4;
+const movementCards = 7;
 const inventoryCards = 2;
 const revealRoundsCards = 2;
 const abilityCards = 1;
@@ -56,7 +56,10 @@ class CardMutator {
             this.test.setScale(0.35);
             if(array.length > 0){
                 // only clear mutations of the movement category
-                let movementCards = array.filter(x => x == "diagonal" || x == "leftRight" || x == "upDown" || x == "lShape");
+                let movementCards = array.filter(x => 
+                    x == "diagonal" || x == "leftRight" || x == "upDown" || 
+                    x == "lShape" || x == "2OutCorner" || x == "2OutMiddle" || 
+                    x == "3OutMiddle");
                 console.log(movementCards);
                 let removedMutation = movementCards[Math.floor(Math.random() * movementCards.length)]
                 array.splice(array.indexOf(removedMutation), 1);
@@ -79,6 +82,15 @@ class CardMutator {
         else if(rand == 3 && array.indexOf("lShape")==-1){
             cardVisual = CardMutator.drawCard(scene, 'lShape', array);
         }
+        else if(rand == 4 && array.indexOf("2OutCorner")==-1){
+            cardVisual = CardMutator.drawCard(scene, '2OutCorner', array);
+        }
+        else if(rand == 5 && array.indexOf("2OutMiddle")==-1){
+            cardVisual = CardMutator.drawCard(scene, '2OutMiddle', array);
+        }
+        else if(rand == 6 && array.indexOf("3OutMiddle")==-1){
+            cardVisual = CardMutator.drawCard(scene, '3OutMiddle', array);
+        }
         else if(array.length >= allMutations){
             //if all the mutations are taken already it does nothing
             console.log("Array full");
@@ -87,6 +99,7 @@ class CardMutator {
             //redraws it if it got a duplicate
             scene.events.emit("drawMutation", array);
         }
+        //returns the cardVisual so it can get destroyed when a new mutation is drawn
         return cardVisual;
     
     }

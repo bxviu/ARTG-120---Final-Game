@@ -55,7 +55,6 @@ class Player extends Entity {
         if(turn != 1){
             this.scene.events.emit("removeCard");
         }
-        // turn++;
     }
 
     showPossibleSpaces() {        
@@ -65,6 +64,18 @@ class Player extends Entity {
         this.mutations.forEach(mutation => {
             if (mutation == "lShape") {
                 this.showSpacesL();
+                hasMutation = true;
+            }
+            if (mutation == "2OutCorner") {
+                this.showSpacesCorners2Out();
+                hasMutation = true;
+            }
+            if (mutation == "2OutMiddle") {
+                this.showSpacesMiddle2Out();
+                hasMutation = true;
+            }
+            if (mutation == "3OutMiddle") {
+                this.showSpacesMiddle3Out();
                 hasMutation = true;
             }
             if (mutation == "diagonal") {
@@ -121,6 +132,33 @@ class Player extends Entity {
     showSpacesUpDown() {
         let resultTileXYArray = this.board.getTileXYAtDirection({x:this.x, y:this.y}, [4, 6], { end: 1 });
         this.possibleCoords = [...this.possibleCoords, ...resultTileXYArray];  
+        this.showGivenSpaces();
+    }
+
+    showSpacesCorners2Out() {
+        this.possibleCoords = [...this.possibleCoords,
+            {x:this.x-2, y:this.y-2}, 
+            {x:this.x+2, y:this.y-2}, 
+            {x:this.x-2, y:this.y+2}, 
+            {x:this.x+2, y:this.y+2}];  
+        this.showGivenSpaces();
+    }
+
+    showSpacesMiddle2Out() {
+        this.possibleCoords = [...this.possibleCoords, 
+            {x:this.x, y:this.y-2},
+            {x:this.x+2, y:this.y}, 
+            {x:this.x, y:this.y+2}, 
+            {x:this.x-2, y:this.y}];  
+        this.showGivenSpaces();
+    }
+
+    showSpacesMiddle3Out() {
+        this.possibleCoords = [...this.possibleCoords, 
+            {x:this.x, y:this.y-3},
+            {x:this.x+3, y:this.y}, 
+            {x:this.x, y:this.y+3}, 
+            {x:this.x-3, y:this.y}];  
         this.showGivenSpaces();
     }
 
@@ -275,22 +313,9 @@ class Player extends Entity {
                 roundRevealModified = true;
             }
             if (mutation == "oneItem") {
-                this.itemSpace = 1;
-                let droppedItem = null;
-                let droppedX = 0;
-                let droppedY = 0;
-                while (this.items.length > 1) {
-                    droppedItem = this.items.pop();
-                    while ((droppedX == 0 && droppedY == 0) || this.board.contains(this.x + droppedX, this.x + droppedY, 0)) {
-                        droppedX = Math.floor(Math.random() * 3) - 1;
-                        droppedY = Math.floor(Math.random() * 3) - 1;
-                    }
-                    console.log(this.x + droppedX, this.y + droppedY, droppedItem.id, droppedItem.name);
-                    this.game.items.push(this.game.createItem(this.x + droppedX, this.y + droppedY, droppedItem.id, droppedItem.name));
-                    this.game.items[this.game.items.length - 1].updateVisual();
-                }
-                
+                this.itemSpace = 1;          
                 itemSpaceModified = true;
+                this.dropItems();
             }
             if (mutation == "extraItem") {
                 this.itemSpace = 3;
@@ -302,14 +327,36 @@ class Player extends Entity {
         }
         if (!itemSpaceModified) {
             this.itemSpace = 2;
+            this.dropItems();
         }
         if (this.secondChance) {
             this.addSecondChanceVisual();
         }
     }
 
+    dropItems() {
+        let droppedItem = null;
+        let droppedX = 0;
+        let droppedY = 0;
+        // repeatedly drops items until the amount is equal to the itemspace
+        while (this.items.length > this.itemSpace) {
+            droppedItem = this.items.pop();
+            // drops the item 1 space away from the player randomly
+            while (!this.board.contains(this.x + droppedX, this.y + droppedY) 
+                    && (droppedX == 0 && droppedY == 0) 
+                    || this.board.contains(this.x + droppedX, this.x + droppedY, 0)) 
+            {
+                droppedX = Math.floor(Math.random() * 3) - 1;
+                droppedY = Math.floor(Math.random() * 3) - 1;
+            }
+            console.log(this.x + droppedX, this.y + droppedY, droppedItem.id, droppedItem.name);
+            this.game.items.push(this.game.createItem(this.x + droppedX, this.y + droppedY, droppedItem.id, droppedItem.name));
+            this.game.items[this.game.items.length - 1].updateVisual();
+        }
+    }
+
     addSecondChanceVisual() {
-        // this.updateVisual(0x009900);
+        // a glow to help show the player is protected by a card effect
         this.board.removeChess(null, this.x, this.y, 1, true);
         this.scene.rexBoard.add.shape(this.board, this.x, this.y, 1, 0x009900).setScale(1);
         if (this.board.tileXYZToChess(this.x, this.y, 1)) {

@@ -22,8 +22,11 @@ class Demo extends Phaser.Scene {
         this.load.image('reveal6', 'reveal6.png');
         this.load.image('teleport', 'teleport.png');
         this.load.image('upDown', 'updown.png');
-        // this image doesn't exist but i hope someone makes one
+        // these images don't exist but i hope someone makes one
         this.load.image('lShape', 'lShape.png');
+        this.load.image('2OutCorner', '2OutCorner.png');
+        this.load.image('2OutMiddle', '2OutMiddle.png');
+        this.load.image('3OutMiddle', '3OutMiddle.png');
         //action cards
         this.load.image('closer', 'closer.png');
         this.load.image('escape', 'escape.png');
