@@ -21,7 +21,7 @@ class Monster extends Entity {
 
         if (Math.random() > chanceToMove) {
             console.log("Monster chose not to move");
-            return
+            return;
         }
         
         let closestPlayer = -1
