@@ -183,19 +183,19 @@ class ItemInfoScreen extends Menu {
 
         let text = "";
         if (this.item.name == "Salt") {
-            text = "Salt lore";
+            text = "The darkness prefers sugar. An ingredient needed at the altar.";
         }
         else if (this.item.name == "Crowbar") {
-            text = "Crowbar lore";
+            text = "This might be useful in prying open the altar.";
         }
         else if (this.item.name == "Book") {
-            text = "Book lore";
+            text = "A book on dark rituals. Needed to banish the monster.";
         }
         else if (this.item.name == "Torch") {
-            text = "Torch lore";
+            text = "A torch to light your way, and set things ablaze.";
         }
         else if (this.item.name == "Cross") {
-            text = "Cross lore";
+            text = "A religious item, it has power over the Monster.";
         }
         else {
             text = "unknown item";
