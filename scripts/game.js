@@ -22,7 +22,6 @@ class Demo extends Phaser.Scene {
         this.load.image('reveal6', 'reveal6.png');
         this.load.image('teleport', 'teleport.png');
         this.load.image('upDown', 'updown.png');
-        // these images don't exist but i hope someone makes one
         this.load.image('lShape', 'lshape.png');
         this.load.image('2OutCorner', 'diag2.png');
         this.load.image('2OutMiddle', 'udlr2.png');
@@ -44,6 +43,8 @@ class Demo extends Phaser.Scene {
         this.load.image("book-b", "Book_board.png");
         this.load.image("torch-b", "torch_board.png");
         this.load.image("cross-b", "cross_board.png");
+        //background
+        this.load.image("background", "background.jpg");
     }
 
     create() {
@@ -74,6 +75,16 @@ class Demo extends Phaser.Scene {
         // action listener made in player constructor, which is called in g.initializeGame
         this.events.removeListener("action");
 
+        this.background = this.add.image(450, 200, "background");
+        this.background.setOrigin(0.5);
+        this.background.setScale(1.5);
+        this.background.setAlpha(0.5);
+        this.background.setDepth(-1);
+        // this.background.setScrollFactor(0);
+        // this.background.setInteractive();
+        // this.background.on('pointerdown', () => {
+        //     console.log("background clicked");
+        // }
         console.log(board);
         let g = new Game(this, board);
         g.initializeGame(1);
@@ -100,12 +111,24 @@ class Demo extends Phaser.Scene {
         this.events.on("drawMutation", (param) =>{
             this.ui.drawMutation(param);
         });
-        
+        // console.log(this.cameras.main)
+        // this.cameras.main.startFollow(g.players[0].visual);
+        // this.cameras.main.setFollowOffset(0, -220);
+        // this.cameras.main.setZoom(1.);
     }
 
     update() {
         this.ui.updateItemsText();
-        
+        // if (this.ui.mutationCardVisual) {
+        //     this.ui.mutationCardVisual.x = this.cameras.main.midPoint.x - 300;
+        //     this.ui.mutationCardVisual.y = this.cameras.main.midPoint.y + 150;
+        // }
+        // if (this.ui.action) {
+        //     this.ui.action.x = this.cameras.main.midPoint.x + 300;
+        //     this.ui.action.y = this.cameras.main.midPoint.y + 150;
+        // }
+        // this.displayCards.x = this.cameras.main.midPoint.x - 365;
+        // this.displayCards.y = this.cameras.main.midPoint.y + 10;
     }
 }
 

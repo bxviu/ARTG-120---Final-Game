@@ -180,7 +180,7 @@ class Game {
             }
         }
         // monster movement
-        if (this.turn[this.currentTurn] == -1 && !this.navigated) {
+        if (this.turn[this.currentTurn] == -1 && !this.navigated && !this.monster.offBoard) {
             this.navigated = true;
             this.scene.time.delayedCall(250, () => {
                 this.monster.navigate(this.players);
