@@ -11,6 +11,12 @@ class UI {
     }
 
     updateItemsText() {
+        if (this.game.players[0].itemSpace == 1) {
+            this.itemsText.setText("Item: (Can hold " + this.game.players[0].itemSpace + ")");
+        }
+        else {
+            this.itemsText.setText("Items: (Can hold " + this.game.players[0].itemSpace + ")");
+        }
         this.inventoryVisual.forEach(item => {
             item.destroy();
         });
@@ -63,7 +69,7 @@ class UI {
         }else{
             this.scene.events.emit("gainCard");
         }
-        this.action.setInteractive();
+        this.action.setInteractive({useHandCursor: true});
         this.action.setScrollFactor(0).setDepth(4);
         this.actionUsed = false;
         let card = null;
@@ -117,7 +123,7 @@ class UI {
 
         this.mutationCardVisual = CardMutator.mutate(this.scene, array);
         if (this.mutationCardVisual) {
-            this.mutationCardVisual.setInteractive();
+            this.mutationCardVisual.setInteractive({useHandCursor: true});
             this.mutationCardVisual.setScrollFactor(0);
             this.mutationCardVisual.x = 225;
             this.mutationCardVisual.y = 550;
@@ -194,7 +200,7 @@ class Display extends Phaser.Scene{
         //left arrow
         this.left = this.add.image(240, 290, "arrow").setScale(0.5);//this.add.text(280, 290, "<", {color: "#00ff00"}).setFontSize(50);
         this.left.flipX = true;
-        this.left.setInteractive();
+        this.left.setInteractive({useHandCursor: true});
         this.left.on('pointerdown', () => {
             if(this.num > 1){
                 this.currentCard.destroy();
@@ -210,8 +216,8 @@ class Display extends Phaser.Scene{
             this.left.clearTint();
         })
         //right arrow
-        this.right = this.add.image(560, 290, "arrow").setScale(0.5);//this.add.text(494, 290, ">", {color: "#00ff00"}).setFontSize(50);
-        this.right.setInteractive();
+        this.right = this.add.image(560, 290, "arrow").setScale(0.5);
+        this.right.setInteractive({useHandCursor: true});
         this.right.on('pointerdown', () => {
             if(this.num < this.array.length){
                 this.currentCard.destroy();
@@ -227,8 +233,8 @@ class Display extends Phaser.Scene{
             this.right.clearTint();
         })
         //X to quit the ui
-        this.leave = this.add.image(750, 50, "x").setScale(0.35);//this.add.text(750, 50, "X", {color: "#ff0000"}).setFontSize(100);
-        this.leave.setInteractive();
+        this.leave = this.add.image(750, 50, "x").setScale(0.35);
+        this.leave.setInteractive({useHandCursor: true});
         this.leave.on('pointerdown', () => {
             this.scene.stop('display');
             this.scene.resume('examples');
