@@ -23,10 +23,10 @@ class Demo extends Phaser.Scene {
         this.load.image('teleport', 'teleport.png');
         this.load.image('upDown', 'updown.png');
         // these images don't exist but i hope someone makes one
-        this.load.image('lShape', 'lShape.png');
-        this.load.image('2OutCorner', '2OutCorner.png');
-        this.load.image('2OutMiddle', '2OutMiddle.png');
-        this.load.image('3OutMiddle', '3OutMiddle.png');
+        this.load.image('lShape', 'lshape.png');
+        this.load.image('2OutCorner', 'diag2.png');
+        this.load.image('2OutMiddle', 'udlr2.png');
+        this.load.image('3OutMiddle', 'udlr3.png');
         //action cards
         this.load.image('closer', 'closer.png');
         this.load.image('escape', 'escape.png');
@@ -68,14 +68,14 @@ class Demo extends Phaser.Scene {
         this.ui = new UI(this, g);
 
         //button for displaying the mutation cards ui
-        this.displayCards = this.add.text(30, 360, "Mutation Cards", {color: "#ffffff"});
-        this.displayCards.setInteractive();
-        this.displayCards.on('pointerdown', () => {
-            if(g.players[0].mutations.length > 0){
-                this.scene.pause('examples');
-                this.scene.launch('display', g.players[0].mutations);
-            }
-        })
+        this.displayCards = this.add.text(30, 340, "Mutation Cards", {color: "#ffffff"});
+        // this.displayCards.setInteractive();
+        // this.displayCards.on('pointerdown', () => {
+        //     if(g.players[0].mutations.length > 0){
+        //         this.scene.pause('examples');
+        //         this.scene.launch('display', g.players[0].mutations);
+        //     }
+        // })
     
         console.log(this);
         this.events.on("gainCard", () => {
@@ -108,20 +108,20 @@ var getQuadGrid = function (scene) {
     return grid;
 }
 
-var getHexagonGrid = function (scene) {
-    var staggeraxis = 'x';
-    var staggerindex = 'odd';
-    var grid = scene.rexBoard.add.hexagonGrid({
-        x: 100,
-        y: 100,
-        // size: 30,
-        cellWidth: 72,
-        cellHeight: 72,
-        staggeraxis: staggeraxis,
-        staggerindex: staggerindex
-    })
-    return grid;
-};
+// var getHexagonGrid = function (scene) {
+//     var staggeraxis = 'x';
+//     var staggerindex = 'odd';
+//     var grid = scene.rexBoard.add.hexagonGrid({
+//         x: 100,
+//         y: 100,
+//         // size: 30,
+//         cellWidth: 72,
+//         cellHeight: 72,
+//         staggeraxis: staggeraxis,
+//         staggerindex: staggerindex
+//     })
+//     return grid;
+// };
 
 var config = {
     type: Phaser.AUTO,

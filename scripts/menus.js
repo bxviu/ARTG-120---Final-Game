@@ -168,6 +168,11 @@ class ItemInfoScreen extends Menu {
     }
     
     preload() {
+        this.load.image('torch', 'assets/torch.png');
+        this.load.image('book', 'assets/Book.png');
+        this.load.image('crowbar', 'assets/crowbar.png');
+        this.load.image('salt', 'assets/salt.png');
+        this.load.image('cross', 'assets/cross.png');
     }
     create(){
         let wholeContainer = this.add.container(400, -1000);
@@ -180,7 +185,7 @@ class ItemInfoScreen extends Menu {
         title.setOrigin(0.5);
 
         wholeContainer.add([title]);
-
+        
         let text = "";
         if (this.item.name == "Salt") {
             text = "The darkness prefers sugar. An ingredient needed at the altar.";
@@ -200,11 +205,33 @@ class ItemInfoScreen extends Menu {
         else {
             text = "unknown item";
         }
-        let itemText = this.add.text(0, 0, text,
-                                            {font: "50px Arial", fill: "#000000", wordWrap: { width: 600, useAdvancedWrap: true }});
+        let itemText = this.add.text(125, 0, text,
+                                            {font: "50px Arial", fill: "#000000", wordWrap: { width: 400, useAdvancedWrap: true}, align: 'center' });
         itemText.setOrigin(0.5);
 
         wholeContainer.add([itemText]);
+
+        let image = null;
+        let imageX = -200;
+        let imageY = 40;
+        if (this.item.name == "Salt") {
+            image = this.add.image(imageX, imageY, 'salt');
+        }
+        else if (this.item.name == "Crowbar") {
+            image = this.add.image(imageX, imageY, 'crowbar');
+        }
+        else if (this.item.name == "Book") {
+            image = this.add.image(imageX, imageY, 'book');
+        }
+        else if (this.item.name == "Torch") {
+            image = this.add.image(imageX, imageY, 'torch');
+        }
+        else if (this.item.name == "Cross") {
+            image = this.add.image(imageX, imageY, 'cross');
+        }
+        image.setScale(0.15).setOrigin(0.5);
+
+        wholeContainer.add([image]);
 
         //X to quit the ui
         let leave = this.add.text(350, -290, "X").setFontSize(50);
