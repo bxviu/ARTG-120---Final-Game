@@ -80,7 +80,7 @@ class Demo extends Phaser.Scene {
         this.background.setScale(1.5);
         this.background.setAlpha(0.5);
         this.background.setDepth(-1);
-        // this.background.setScrollFactor(0);
+        this.background.setScrollFactor(0.1);
         // this.background.setInteractive();
         // this.background.on('pointerdown', () => {
         //     console.log("background clicked");
@@ -91,14 +91,7 @@ class Demo extends Phaser.Scene {
         this.ui = new UI(this, g);
 
         //button for displaying the mutation cards ui
-        this.displayCards = this.add.text(30, 340, "Mutation Cards", {color: "#ffffff"});
-        // this.displayCards.setInteractive();
-        // this.displayCards.on('pointerdown', () => {
-        //     if(g.players[0].mutations.length > 0){
-        //         this.scene.pause('examples');
-        //         this.scene.launch('display', g.players[0].mutations);
-        //     }
-        // })
+        this.displayCards = this.add.text(160, 420, "Mutation Cards", {color: "#ffffff"}).setDepth(3);
     
         console.log(this);
         this.events.on("gainCard", () => {
@@ -111,24 +104,21 @@ class Demo extends Phaser.Scene {
         this.events.on("drawMutation", (param) =>{
             this.ui.drawMutation(param);
         });
-        // console.log(this.cameras.main)
-        // this.cameras.main.startFollow(g.players[0].visual);
-        // this.cameras.main.setFollowOffset(0, -220);
-        // this.cameras.main.setZoom(1.);
+
+        this.cameras.main.startFollow(g.players[0].visual);
+
+        this.zoom = 1.6
+        this.cameras.main.setZoom(this.zoom);
+
+        this.displayCards.x = 160;
+        this.displayCards.y = 420;
+
+        this.displayCards.setScrollFactor(0);
+
     }
 
     update() {
         this.ui.updateItemsText();
-        // if (this.ui.mutationCardVisual) {
-        //     this.ui.mutationCardVisual.x = this.cameras.main.midPoint.x - 300;
-        //     this.ui.mutationCardVisual.y = this.cameras.main.midPoint.y + 150;
-        // }
-        // if (this.ui.action) {
-        //     this.ui.action.x = this.cameras.main.midPoint.x + 300;
-        //     this.ui.action.y = this.cameras.main.midPoint.y + 150;
-        // }
-        // this.displayCards.x = this.cameras.main.midPoint.x - 365;
-        // this.displayCards.y = this.cameras.main.midPoint.y + 10;
     }
 }
 
@@ -153,6 +143,7 @@ var config = {
         autoCenter: Phaser.Scale.CENTER_BOTH,
     },
     scene: [StartScreen, Demo, Display, EndScreen, ItemInfoScreen]
+    // scene: [Demo, Display, EndScreen, ItemInfoScreen]
 };
 
 var game = new Phaser.Game(config);

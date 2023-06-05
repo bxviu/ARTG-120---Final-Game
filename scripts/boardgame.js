@@ -203,6 +203,7 @@ class Game {
     
 
     updateBoard() {
+        this.scene.cameras.main.setZoom(1.6);
         // clear everything
         this.board.removeAllChess(true);
 

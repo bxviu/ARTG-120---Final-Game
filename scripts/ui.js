@@ -2,8 +2,9 @@ class UI {
     constructor(scene, game) {
         this.game = game
         this.scene = scene;
-        this.itemsText = this.scene.add.text(10, 10, "Items: ");
-        this.inventoryVisual = []
+        this.itemsText = this.scene.add.text(160, 120, "Items: ");
+        this.itemsText.setScrollFactor(0).setDepth(4);
+        this.inventoryVisual = [];
         this.action;
         this.actionUsed = false;
         this.mutationCardVisual = null;
@@ -13,8 +14,8 @@ class UI {
         this.inventoryVisual.forEach(item => {
             item.destroy();
         });
-        let imageX = 40;
-        let imageY = 60;
+        let imageX = 190;
+        let imageY = 165;
         this.game.players[0].items.forEach(item => {
             let image = null;
             if (item.name == "Salt") {
@@ -24,7 +25,6 @@ class UI {
                 image = this.scene.add.image(imageX, imageY, 'crowbar-b').setOrigin(0.5);
             }
             else if (item.name == "Book") {
-                console.log("brue   ")
                 image = this.scene.add.image(imageX, imageY, 'book-b').setOrigin(0.5);
             }
             else if (item.name == "Torch") {
@@ -35,6 +35,7 @@ class UI {
             }
             if (image) {
                 image.setScale(0.05);
+                image.setScrollFactor(0).setDepth(4);
                 imageX += 70;
                 this.inventoryVisual.push(image);
             }
@@ -48,18 +49,22 @@ class UI {
             this.action.destroy();
         }
 
+        let x = 570;
+        let y = 570;
+
         if(rand == 0){
-            this.action = this.scene.add.image(715, 460, 'closer').setScale(0.38);
+            this.action = this.scene.add.image(x, y, 'closer').setScale(0.38);
         }else if(rand == 1){
-            this.action = this.scene.add.image(715, 460, 'escape').setScale(0.38);
+            this.action = this.scene.add.image(x, y, 'escape').setScale(0.38);
         }else if(rand == 2){
-            this.action = this.scene.add.image(715, 460, 'extraSpace').setScale(0.38);
+            this.action = this.scene.add.image(x, y, 'extraSpace').setScale(0.38);
         }else if(rand == 3){
-            this.action = this.scene.add.image(715, 460, 'jump8').setScale(0.38);
+            this.action = this.scene.add.image(x, y, 'jump8').setScale(0.38);
         }else{
             this.scene.events.emit("gainCard");
         }
         this.action.setInteractive();
+        this.action.setScrollFactor(0).setDepth(4);
         this.actionUsed = false;
         let card = null;
         if (rand == 0) {
@@ -80,6 +85,29 @@ class UI {
                 this.actionUsed = true;
             }
         })
+        .on('pointerover', () => {
+            this.scene.tweens.add({
+                targets: this.action,
+                y: this.action.y - 200,
+                duration: 300,
+                onComplete: () => {
+                    this.action.y = 350;
+                    // if (!this.actionUsed)
+                        // this.action.alpha = 1;
+                }
+            })
+        })
+        .on('pointerout', () => {
+            this.scene.tweens.add({
+                targets: this.action,
+                y: this.action.y + 200,
+                duration: 300,
+                onComplete: () => {
+                    this.action.y = 570;
+                    // this.action.alpha = 0.75;
+                }
+            })
+        })
     }
 
     drawMutation(array){
@@ -90,11 +118,37 @@ class UI {
         this.mutationCardVisual = CardMutator.mutate(this.scene, array);
         if (this.mutationCardVisual) {
             this.mutationCardVisual.setInteractive();
+            this.mutationCardVisual.setScrollFactor(0);
+            this.mutationCardVisual.x = 225;
+            this.mutationCardVisual.y = 550;
+            this.mutationCardVisual.setDepth(4);
             this.mutationCardVisual.on('pointerdown', () => {
                 if(array.length > 0){
                     this.scene.scene.pause('examples');
                     this.scene.scene.launch('display', array);
                 }
+            })
+            .on('pointerover', () => {
+                this.scene.tweens.add({
+                    targets: this.mutationCardVisual,
+                    y: this.mutationCardVisual.y - 180,
+                    duration: 300,
+                    onComplete: () => {
+                        this.mutationCardVisual.y = 370;
+                        // this.mutationCardVisual.alpha = 1;
+                    }
+                })
+            })
+            .on('pointerout', () => {
+                this.scene.tweens.add({
+                    targets: this.mutationCardVisual,
+                    y: this.mutationCardVisual.y + 180,
+                    duration: 300,
+                    onComplete: () => {
+                        this.mutationCardVisual.y = 550;
+                        // this.mutationCardVisual.alpha = 0.75;
+                    }
+                })
             })
         }
         
