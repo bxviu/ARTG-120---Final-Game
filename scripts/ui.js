@@ -157,7 +157,7 @@ class Display extends Phaser.Scene{
         })
         //right arrow
         this.right = this.add.text(494, 290, ">", {color: "#00ff00"}).setFontSize(50);
-        this.right.setInteractive();
+        this.right.setInteractive({useHandCursor: true});
         this.right.on('pointerdown', () => {
             if(this.num < this.array.length){
                 this.currentCard.destroy();
@@ -174,7 +174,7 @@ class Display extends Phaser.Scene{
         })
         //X to quit the ui
         this.leave = this.add.text(750, 0, "X").setFontSize(50);
-        this.leave.setInteractive();
+        this.leave.setInteractive({useHandCursor: true});
         this.leave.on('pointerdown', () => {
             this.scene.stop('display');
             this.scene.resume('examples');
