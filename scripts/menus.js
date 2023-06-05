@@ -117,7 +117,7 @@ class EndScreen extends Menu {
 
         text = this.wonGame  ? "You successfully banished the dark being and escaped!" : "You were consumed by the monster.";
         let instructionsText = this.add.text(0, 0, text,
-                                            {font: "50px Arial", fill: "#000000", wordWrap: { width: 600, useAdvancedWrap: true }});
+                                            {font: "50px Arial", fill: "#000000", wordWrap: { width: 600, useAdvancedWrap: true }, align: 'center'});
         instructionsText.setOrigin(0.5);
 
         wholeContainer.add([instructionsText]);

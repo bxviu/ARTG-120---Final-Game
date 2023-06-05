@@ -32,7 +32,7 @@ class StoryScreen extends Menu {
 
         wholeContainer.add([progress]);
 
-        let storyImage = [2,4]
+        let storyImage = [2,4]//,14,19]
         if (storyImage.includes(this.storyPart)) {
             let image = null;
             let imageX = -200;
@@ -42,9 +42,17 @@ class StoryScreen extends Menu {
                 image.setScale(0.3).setOrigin(0.5);
             }
             else if (this.storyPart == 4) {
-                image = this.add.image(imageX, imageY, "monster");
-                image.setScale(1).setOrigin(0.3);
+                image = this.add.image(imageX, imageY+200, "monster");
+                image.setScale(1).setOrigin(0.5);
             }
+            // else if (this.storyPart == 14 && !this.wonGame) {
+            //     image = this.add.image(imageX, imageY+200, "monster");
+            //     image.setScale(1).setOrigin(0.5);
+            // }
+            // else if (this.storyPart == 19 && this.wonGame) {
+            //     image = this.add.image(imageX, imageY+200, "monster");
+            //     image.setScale(1).setOrigin(0.5);
+            // }
 
             wholeContainer.add([image]);
         }
@@ -142,7 +150,19 @@ class StoryScreen extends Menu {
             }
         }
         let itemText = null;
+        let useImage = false;
+
         if (storyImage.includes(this.storyPart)) {
+            useImage = true
+        }
+        // else if (this.storyPart == 14 && !this.wonGame) {
+        //     useImage = true
+        // }
+        // else if (this.storyPart == 19 && this.wonGame) {
+        //     useImage = true
+        // }
+
+        if (useImage) {
             itemText = this.add.text(125, 0, text,
                 {font: "40px Arial", fill: "#000000", wordWrap: { width: 400, useAdvancedWrap: true}, align: 'center' });
         }
