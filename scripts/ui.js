@@ -34,7 +34,7 @@ class UI {
                 image = this.scene.add.image(imageX, imageY, 'cross-b').setOrigin(0.5);
             }
             if (image) {
-                image.setScale(0.05).setAlpha(0.7);
+                image.setScale(0.05);
                 imageX += 70;
                 this.inventoryVisual.push(image);
             }

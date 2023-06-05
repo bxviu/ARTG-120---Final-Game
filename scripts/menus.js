@@ -86,7 +86,7 @@ class StartScreen extends Menu {
 
         wholeContainer.add([startBox]);
 
-        let startText = this.add.text(0, 175, "Start", { font: '50px Arial', fill: '#af00af' }).setOrigin(0.5);
+        let startText = this.add.text(0, 175, "Start", { font: '50px Arial', fill: '#ff0000' }).setOrigin(0.5);
 
         wholeContainer.add([startText]);
 
@@ -134,13 +134,13 @@ class EndScreen extends Menu {
 
         wholeContainer.add([instructionsText]);
 
-        let startBox = this.add.rexRoundRectangle(0, 175, 150, 100, 30, 0xffffaa, 1);
+        let startBox = this.add.rexRoundRectangle(0, 175, 170, 100, 30, 0xffffaa, 1);
         startBox.postFX.addShadow(-1,1,0.02,1,0x000000,12,1);
         startBox.setInteractive({useHandCursor: true});
 
         wholeContainer.add([startBox]);
 
-        let startText = this.add.text(0, 175, "Replay", { font: '50px Arial', fill: '#af00af' }).setOrigin(0.5);
+        let startText = this.add.text(0, 175, "Replay", { font: '50px Arial', fill: '#ff0000' }).setOrigin(0.5);
 
         wholeContainer.add([startText]);
 
@@ -173,6 +173,7 @@ class ItemInfoScreen extends Menu {
         this.load.image('crowbar', 'assets/crowbar.png');
         this.load.image('salt', 'assets/salt.png');
         this.load.image('cross', 'assets/cross.png');
+        this.load.image('x', 'assets/x.png');
     }
     create(){
         let wholeContainer = this.add.container(400, -1000);
@@ -234,11 +235,16 @@ class ItemInfoScreen extends Menu {
         wholeContainer.add([image]);
 
         //X to quit the ui
-        let leave = this.add.text(350, -290, "X").setFontSize(50);
+        let leave = this.add.image(350, -250, "x").setScale(0.35);
         leave.setInteractive();
         leave.on('pointerdown', () => {
             this.menuLeave(wholeContainer, "iteminfo", "examples", {resume:true});
-            // this.scene.stop('iteminfo');
+        })
+        .on('pointerover', () => {
+            leave.setScale(0.4);
+        })
+        .on('pointerout', () => {
+            leave.setScale(0.35);
         })
 
         wholeContainer.add([leave]);
