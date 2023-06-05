@@ -4,7 +4,7 @@ class StoryScreen extends Menu {
     }
     init(storyPart){
         this.storyPart = storyPart.num;
-        this.camera = storyPart.camera;
+        this.wonGame = storyPart.wonGame;
     }
     
     preload() {
@@ -19,13 +19,15 @@ class StoryScreen extends Menu {
         this.load.image('x', 'x.png');
     }
     create(){
+        super.create();
+
         let wholeContainer = this.add.container(-1000, 300);
         let entireBox = this.add.rexRoundRectangle(0, 0, 700, 500, 30, 0x99b0af, 1);
         entireBox.postFX.addShadow(-1,1,0.02,1,0x000000,12,1);
 
         wholeContainer.add([entireBox]);
         
-        let progress = this.add.text(0, -190, this.storyPart+"/10", {font: "50px Arial", fill: "#000000"});
+        let progress = this.add.text(0, -190, "Page " + this.storyPart, {font: "50px Arial", fill: "#000000"});
         progress.setOrigin(0.5);
 
         wholeContainer.add([progress]);
@@ -64,10 +66,7 @@ class StoryScreen extends Menu {
             text = "This figure is not what you wanted to summon.";
         }
         else if (this.storyPart == 6) {
-            this.camera = this.cameras.main;
-            if (this.camera) {
-                this.camera.shake(1500, 0.01);
-            }
+            this.cameras.main.shake(1500, 0.01);
             text = "A burst of energy flows from the figure, causing you and your ritual items to be knocked away from the altar you were at.";
         }
         else if (this.storyPart == 7) {
@@ -91,35 +90,56 @@ class StoryScreen extends Menu {
                     "to use.\nYou won't know the true location of the dark being every step. Only " +
                     "after every few steps the monsters true location will be shown.";
         }
-        else if (this.storyPart == 12) {
-            text = "You reach the altar with all the items.";
-        }
-        else if (this.storyPart == 13) {
-            text = "Quickly using the crowbar, you remove the debris covering the altar.";
-        }
-        else if (this.storyPart == 14) {
-            text = "With the cross, you point it toward the monster, preventing it from coming closer while you finish the banishment ritual.";
-        }
-        else if (this.storyPart == 15) {
-            text = "Flipping through the pages of the book, you find a ritual that can banish this monster.";
-        }
-        else if (this.storyPart == 16) {
-            text = "Following the book, you make an intricate circle on the ground with the salt.";
-        }
-        else if (this.storyPart == 17) {
-            text = "Using the torch in conjunction with the cross, you lead the monster into the salt circle.";
-        }
-        else if (this.storyPart == 18) {
-            text = "\"Abi, entitas inmunda!\"";
-        }
-        else if (this.storyPart == 19) {
-            text = "The monster screeches in pain, and tries to escape the circle. But it is too late, you have finished the ritual.";
-        }
-        else if (this.storyPart == 20) {
-            text = "Utterly exhausted, you leave the altar and the temple. You gained no riches, but you have survived.";
+        else if (this.wonGame) {
+            // if the player wins
+            if (this.storyPart == 12) {
+                text = "You reach the altar with all the items.";
+            }
+            else if (this.storyPart == 13) {
+                text = "Quickly using the crowbar, you remove the debris covering the altar.";
+            }
+            else if (this.storyPart == 14) {
+                text = "With the cross, you point it toward the monster, preventing it from coming closer while you finish the banishment ritual.";
+            }
+            else if (this.storyPart == 15) {
+                text = "Flipping through the pages of the book, you find a ritual that can banish this monster.";
+            }
+            else if (this.storyPart == 16) {
+                text = "Following the book, you make an intricate circle on the ground with the salt.";
+            }
+            else if (this.storyPart == 17) {
+                text = "Using the torch in conjunction with the cross, you lead the monster into the salt circle.";
+            }
+            else if (this.storyPart == 18) {
+                text = "\"Abi, entitas inmunda!\"";
+            }
+            else if (this.storyPart == 19) {
+                text = "The monster screeches in pain, and tries to escape the circle. But it is too late, you have finished the ritual.";
+            }
+            else if (this.storyPart == 20) {
+                text = "Utterly exhausted, you leave the altar and the temple. You gained no riches, but you have survived.";
+            }
         }
         else {
-            text = "error bruh";
+            // if the player loses
+            if (this.storyPart == 12) {
+                text = "You were unable to escape from the monster.";
+            }
+            else if (this.storyPart == 13) {
+                text = "As it approaches, you tremble in fear.";
+            }
+            else if (this.storyPart == 14) {
+                text = "It stands before you.";
+            }
+            else if (this.storyPart == 15) {
+                text = "\"Mecum adiunge\"";
+            }
+            else if (this.storyPart == 16) {
+                text = "As you hear those words, you are pulled in towards the monster.";
+            }
+            else if (this.storyPart == 17) {
+                text = "Endless darkness covers your vision as you are pulled apart within.";
+            }
         }
         let itemText = null;
         if (storyImage.includes(this.storyPart)) {
@@ -142,7 +162,15 @@ class StoryScreen extends Menu {
         let leave = this.add.image(350, -250, "x").setScale(0.35);
         leave.setInteractive({useHandCursor: true});
         leave.on('pointerdown', () => {
-            this.menuLeave(wholeContainer, "story", "story", {num:11,camera: this.camera});
+            if (this.storyPart <= 11) {
+                this.menuLeave(wholeContainer, "story", "story", {num:11,camera: this.camera});
+            }
+            else if (this.wonGame){
+                this.menuLeave(wholeContainer, "story", "end", {wonGame: true});
+            }
+            else {
+                this.menuLeave(wholeContainer, "story", "end", {wonGame: false});
+            }
         })
         .on('pointerover', () => {
             leave.setScale(0.4);
@@ -157,11 +185,20 @@ class StoryScreen extends Menu {
         let arrow = this.add.image(350, 0, "arrow").setScale(0.35);
         arrow.setInteractive({useHandCursor: true});
         arrow.on('pointerdown', () => {
-            if (this.storyPart >= 1 && this.storyPart < 11) {
-                this.menuLeave(wholeContainer, "story", "story", {num:this.storyPart+1,camera: this.camera});
+            if ((this.storyPart >= 1 && this.storyPart < 11)) {
+                this.menuLeave(wholeContainer, "story", "story", {num:this.storyPart+1});
             }
-            else {
+            else if (this.storyPart == 11){
                 this.menuLeave(wholeContainer, "story", "examples", {});
+            }
+            else if ((this.wonGame && this.storyPart >= 12 && this.storyPart < 20) || (!this.wonGame && this.storyPart >= 12 && this.storyPart < 17)) {
+                this.menuLeave(wholeContainer, "story", "story", {num:this.storyPart+1,wonGame: this.wonGame});
+            }
+            else if (this.wonGame && this.storyPart == 20){
+                this.menuLeave(wholeContainer, "story", "end", {wonGame: true});
+            }
+            else if (!this.wonGame && this.storyPart == 17){
+                this.menuLeave(wholeContainer, "story", "end", {wonGame: false});
             }
         })
         .on('pointerover', () => {

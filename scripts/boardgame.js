@@ -265,7 +265,8 @@ class Game {
                 this.scene.add.text(500, 500, "You Win!", {color:"#FFFFFF"}).setOrigin(0.5);
                 console.log("win");                
                 this.scene.time.delayedCall(1250, () => {
-                    this.scene.scene.start("end", {wonGame:true});
+                    this.scene.scene.start("story", {num:12,wonGame:true});
+                    // this.scene.scene.start("end", {wonGame:true});
                 });
             }
         }
@@ -274,9 +275,9 @@ class Game {
     monsterOverlaps() {
         // see if player has escacpe options and use them, if not player dies
         if (this.players[0].x == this.monster.x && this.players[0].y == this.monster.y) {
-            console.log("bruh_");
+            // console.log("bruh_");
             if (this.players[0].mutations.find(mutation => mutation == "teleport") != undefined) {
-                console.log("teke");
+                // console.log("teke");
 
                 this.players[0].teleportEscape(7);
                 this.players[0].mutations.splice(this.players[0].mutations.findIndex(object => {
@@ -285,7 +286,7 @@ class Game {
                 return true;
             }
             if (this.players[0].secondChance) {
-                console.log("escape");
+                // console.log("escape");
 
                 this.players[0].teleportEscape(3);
                 return true;
@@ -294,7 +295,8 @@ class Game {
                 this.players[0].die();
                 this.scene.add.text(500, 500, "You Died...", {color:"#FFFFFF"}).setOrigin(0.5);
                 this.scene.time.delayedCall(1250, () => {
-                    this.scene.scene.start("end", {wonGame:false});
+                    this.scene.scene.start("story", {num:12,wonGame:false});
+                    // this.scene.scene.start("end", {wonGame:false});
                 });
             }
         }

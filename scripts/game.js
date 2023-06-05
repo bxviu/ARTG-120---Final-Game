@@ -81,10 +81,7 @@ class Demo extends Phaser.Scene {
         this.background.setAlpha(0.5);
         this.background.setDepth(-1);
         this.background.setScrollFactor(0.1);
-        // this.background.setInteractive();
-        // this.background.on('pointerdown', () => {
-        //     console.log("background clicked");
-        // }
+
         console.log(board);
         let g = new Game(this, board);
         g.initializeGame(1);
