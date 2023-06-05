@@ -31,13 +31,26 @@ class Entity {
         } 
         let chess = this.board.tileXYZToChess(this.x, this.y, 0);
         if (this.visual) {
-            this.visual.setPosition(chess.x, chess.y);
+            this.scene.tweens.add({
+                x: chess.x,
+                y: chess.y,
+                targets: this.visual,
+                ease: 'Linear',       // 'Cubic', 'Elastic', 'Bounce', 'Back'
+                duration: 100,
+                repeat: 0,            // -1: infinity
+            });
+            this.scene.time.delayedCall(150, () => {
+                this.visual.setPosition(chess.x, chess.y);
+            });
+
         }
+
     }
 
     die() {  
-        // fade out the entity
+        // fade out the space on the board
         let chess = this.board.tileXYZToChess(this.x, this.y, 0);
+        this.offBoard = true;
         if (chess) {
             this.scene.tweens.addCounter({
                 from: 1,
@@ -47,8 +60,6 @@ class Entity {
                 repeat: 0,            // -1: infinity
                 yoyo: false,
                 onUpdate(tween, targets, key, current, previous, param) {
-                    // var value = current;
-                    // var value = tween.getValue();
                     chess.fillAlpha = tween.getValue();
                 }
             });

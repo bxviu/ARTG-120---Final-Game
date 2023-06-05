@@ -19,7 +19,7 @@ class Menu extends Phaser.Scene {
             this.scene.resume('examples');
         }
         else {
-        this.scene.start(nextScene, config);
+            this.scene.start(nextScene, config);
         }
         if (nextScene != originalScene) {
             this.scene.stop(originalScene);
@@ -238,8 +238,7 @@ class ItemInfoScreen extends Menu {
         leave.setInteractive();
         leave.on('pointerdown', () => {
             this.menuLeave(wholeContainer, "iteminfo", "examples", {resume:true});
-            this.scene.stop('iteminfo');
-            // this.scene.resume('examples');
+            // this.scene.stop('iteminfo');
         })
 
         wholeContainer.add([leave]);

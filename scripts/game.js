@@ -32,6 +32,18 @@ class Demo extends Phaser.Scene {
         this.load.image('escape', 'escape.png');
         this.load.image('extraSpace', 'extraspace.png');
         this.load.image('jump8', 'jump8.png');
+        //player
+        this.load.image('player', 'player.png');
+        //monster
+        this.load.image('monster', 'Monster.png');
+        //items
+        //regular name without "-b" already taken for the item info screen
+        //these are the transparent versions without a large white background
+        this.load.image("salt-b", "salt_board.png");
+        this.load.image("crowbar-b", "crowbar_board.png");
+        this.load.image("book-b", "Book_board.png");
+        this.load.image("torch-b", "torch_board.png");
+        this.load.image("cross-b", "cross_board.png");
     }
 
     create() {
@@ -107,21 +119,6 @@ var getQuadGrid = function (scene) {
     });
     return grid;
 }
-
-// var getHexagonGrid = function (scene) {
-//     var staggeraxis = 'x';
-//     var staggerindex = 'odd';
-//     var grid = scene.rexBoard.add.hexagonGrid({
-//         x: 100,
-//         y: 100,
-//         // size: 30,
-//         cellWidth: 72,
-//         cellHeight: 72,
-//         staggeraxis: staggeraxis,
-//         staggerindex: staggerindex
-//     })
-//     return grid;
-// };
 
 var config = {
     type: Phaser.AUTO,

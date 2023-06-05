@@ -4,7 +4,12 @@ class Monster extends Entity {
         this.oldx = x;
         this.oldy = y;
         this.cards = cards || [];
-        this.visual = this.scene.add.text(this.x, this.y, "M", {color:COLOR_DARK}).setOrigin(0.5);
+        let text = this.scene.add.text(0, 0, "", {color:COLOR_DARK});//this.scene.add.text(0, 0, "M", {color:COLOR_DARK}).setOrigin(0.5);
+        let image = this.scene.add.image(5, 25, "monster").setScale(0.15);
+        // image.originY = 1;
+        // image.originX = 1;
+        console.log(image);
+        this.visual = this.scene.add.container(this.x, this.y, [image, text]).setDepth(1);
         this.visual.setDepth(1);
     }
 
@@ -102,28 +107,25 @@ class Monster extends Entity {
         let chess = this.board.tileXYZToChess(this.oldx, this.oldy, 0);
         if (this.visual) {
             this.visual.setPosition(chess.x, chess.y);
+            this.visual.setAlpha(0.5);
         }
     }
 
     updateVisual() {  
         super.updateVisual();
+        this.visual.setAlpha(1);
         this.oldx = this.x;
         this.oldy = this.y;
     }
-    // updateVisual() {    
-    //     // console.log(this.x, this.y);
-    //     this.scene.rexBoard.add.shape(this.board, this.x, this.y, 0, COLOR_PRIMARY).setScale(0.7);        
-    //     let chess = this.board.tileXYZToChess(this.x, this.y, 0);
-    //     // console.log(chess);
-    //     this.visual.setPosition(chess.x, chess.y);
-    //     // var resultTileXYArray = this.board.getTileXYAtDirection({x:this.x, y:this.y}, [0, 1, 2, 3, 4, 5, 6, 7], { end: 1 });
-    //     // var resultTileXY;
-    //     // for (var i = 0, cnt = resultTileXYArray.length; i < cnt; i++) {
-    //     //     resultTileXY = resultTileXYArray[i];
-    //     //     if (!this.board.contains(resultTileXY.x, resultTileXY.y)) {
-    //     //         continue;
-    //     //     }
-    //     //     this.scene.rexBoard.add.shape(this.board, resultTileXY.x, resultTileXY.y, 0, COLOR_LIGHT).setScale(0.7);
-    //     // }
-    // }
+    
+    die() {  
+        super.die();
+        // fade out and shrink the image
+        this.scene.tweens.add({
+            targets: this.visual,
+            alpha: 0,
+            scale: 0.01,
+            duration: 100
+        });
+    }
 }
