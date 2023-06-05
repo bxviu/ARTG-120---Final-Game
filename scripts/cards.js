@@ -65,7 +65,7 @@ class CardMutator {
                 array.splice(array.indexOf(removedMutation), 1);
                 console.log("clear");
             }
-            return;
+            return this.test;
         }
 
         let cardVisual = null;
@@ -120,7 +120,7 @@ class CardMutator {
                 array.splice(array.indexOf(removedMutation), 1);
                 console.log("clear");
             }
-            return;
+            return this.test;
         }
 
         let cardVisual = null;
@@ -165,7 +165,7 @@ class CardMutator {
                 array.splice(array.indexOf(removedMutation), 1);
                 console.log("clear");
             }
-            return;
+            return this.test;
         }
 
         let cardVisual = null;
@@ -209,7 +209,7 @@ class CardMutator {
                 array.splice(array.indexOf(removedMutation), 1);
                 console.log("clear");
             }
-            return;
+            return this.test;
         }
 
         let cardVisual = null;

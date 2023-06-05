@@ -19,7 +19,7 @@ class Menu extends Phaser.Scene {
             this.scene.resume('examples');
         }
         else {
-        this.scene.start(nextScene, config);
+            this.scene.start(nextScene, config);
         }
         if (nextScene != originalScene) {
             this.scene.stop(originalScene);
@@ -215,21 +215,21 @@ class ItemInfoScreen extends Menu {
         let imageX = -200;
         let imageY = 40;
         if (this.item.name == "Salt") {
-            image = this.add.image(imageX, imageY, 'salt');
+            image = this.add.image(imageX, imageY, 'salt-b');
         }
         else if (this.item.name == "Crowbar") {
-            image = this.add.image(imageX, imageY, 'crowbar');
+            image = this.add.image(imageX, imageY, 'crowbar-b');
         }
         else if (this.item.name == "Book") {
-            image = this.add.image(imageX, imageY, 'book');
+            image = this.add.image(imageX, imageY, 'book-b');
         }
         else if (this.item.name == "Torch") {
-            image = this.add.image(imageX, imageY, 'torch');
+            image = this.add.image(imageX, imageY, 'torch-b');
         }
         else if (this.item.name == "Cross") {
-            image = this.add.image(imageX, imageY, 'cross');
+            image = this.add.image(imageX, imageY, 'cross-b');
         }
-        image.setScale(0.15).setOrigin(0.5);
+        image.setScale(0.3).setOrigin(0.5);
 
         wholeContainer.add([image]);
 
@@ -238,8 +238,7 @@ class ItemInfoScreen extends Menu {
         leave.setInteractive({useHandCursor: true});
         leave.on('pointerdown', () => {
             this.menuLeave(wholeContainer, "iteminfo", "examples", {resume:true});
-            this.scene.stop('iteminfo');
-            // this.scene.resume('examples');
+            // this.scene.stop('iteminfo');
         })
 
         wholeContainer.add([leave]);

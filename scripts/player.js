@@ -4,11 +4,14 @@ class Player extends Entity {
     constructor(scene, board, game, x, y, id, items, cards) {
         super(scene, board, game, id, x, y);
         this.items = items || [];
-        this.cards = cards || [];
+        // this.cards = cards || [];
         this.actionCard = "none";
         this.mutations = [];
-        let text = this.scene.add.text(0, 0, "P" + this.id, {color:COLOR_DARK}).setOrigin(0.5);
-        let image = this.scene.add.rectangle(0, 0, 20, 20, 0xffffff).setOrigin(0.5);
+        let text = this.scene.add.text(0, 0, "", {color:COLOR_DARK});//this.scene.add.text(0, 0, "P" + this.id, {color:COLOR_DARK}).setOrigin(0.5);
+        let image = this.scene.add.image(0, 10, "player").setScale(0.065);
+        image.originY = 0.45;
+        image.originX = 0.5;
+        //this.scene.add.rectangle(0, 0, 20, 20, 0xffffff).setOrigin(0.5);
         this.visual = this.scene.add.container(this.x, this.y, [image, text]).setDepth(1);
         this.possibleCoords = [];
         this.revealLocationRounds = 4;
@@ -18,6 +21,9 @@ class Player extends Entity {
             this.actionCard = card;
             console.log(card);
             if (card == "closer") {
+                if (this.game.items.length == 0) {
+                    return;
+                }
                 // moves a random item closer to the player
                 let randomItem = this.game.items[Math.floor(Math.random() * this.game.items.length)];
                 var ABVector = {x: this.x - randomItem.x, y: this.y - randomItem.y};
@@ -58,7 +64,8 @@ class Player extends Entity {
     }
 
     showPossibleSpaces() {        
-        this.possibleCoords = [];
+        // allow the player to stay in the same spot, so they can try and get different movement mutations, in exchange, the monster gets closer to them
+        this.possibleCoords = [{x:this.x, y:this.y}];
         let hasMutation = false;
         // console.log(this.mutations);
         this.mutations.forEach(mutation => {
@@ -169,42 +176,45 @@ class Player extends Entity {
                 // remove existing tile if it exists to avoid visual glitch of adding on top of it
                 this.board.removeChess(null, coord.x, coord.y, -1, true);
             }
-            this.scene.rexBoard.add.shape(this.board, coord.x, coord.y, -1, COLOR_LIGHT).setScale(1);
-            if (this.board.tileXYZToChess(coord.x, coord.y, -1)) {
-                this.board.tileXYZToChess(coord.x, coord.y, -1).fillAlpha = 0.5;
+            if (this.board.contains(coord.x, coord.y)) {
+                this.scene.rexBoard.add.shape(this.board, coord.x, coord.y, -1, COLOR_LIGHT).setScale(1);
+                if (this.board.tileXYZToChess(coord.x, coord.y, -1)) {
+                    this.board.tileXYZToChess(coord.x, coord.y, -1).fillAlpha = 0.5;
+                }
             }
         });  
     }
 
-    showDetectionRadius() {
-        // radius where player can see the monster no matter what
-        let radius = 2;
-        let coordinates = [];
+    // probably not needed, visual clutter
+    // showDetectionRadius() {
+    //     // radius where player can see the monster no matter what
+    //     let radius = 2;
+    //     let coordinates = [];
 
-        for (let i = -radius; i <= radius; i++) {
-            for (let j = -radius; j <= radius; j++) {
-                let x = this.x + i;
-                let y = this.y + j;
-                coordinates.push({ x: x, y: y });
-            }
-        }
+    //     for (let i = -radius; i <= radius; i++) {
+    //         for (let j = -radius; j <= radius; j++) {
+    //             let x = this.x + i;
+    //             let y = this.y + j;
+    //             coordinates.push({ x: x, y: y });
+    //         }
+    //     }
     
-        coordinates.forEach(coord => {
-            this.board.removeChess(null, coord.x, coord.y, -2, true);
-            this.scene.rexBoard.add.shape(this.board, coord.x, coord.y, -2, 0xED7014).setScale(1);
-            if (this.board.tileXYZToChess(coord.x, coord.y, -2)) {
-                this.board.tileXYZToChess(coord.x, coord.y, -2).fillAlpha = 0.15;
-            }
-        }); 
-    }
+    //     coordinates.forEach(coord => {
+    //         this.board.removeChess(null, coord.x, coord.y, -2, true);
+    //         this.scene.rexBoard.add.shape(this.board, coord.x, coord.y, -2, 0xED7014).setScale(1);
+    //         if (this.board.tileXYZToChess(coord.x, coord.y, -2)) {
+    //             this.board.tileXYZToChess(coord.x, coord.y, -2).fillAlpha = 0.15;
+    //         }
+    //     }); 
+    // }
 
     gainItem(item) {
         this.items.push(item);
     }
 
-    gainCard(card) {
-        this.cards.push(card);
-    }
+    // gainCard(card) {
+    //     this.cards.push(card);
+    // }
 
     teleportEscape(distance) {
         // gets a random location a certain distance away from the player and moves the player there
@@ -231,6 +241,7 @@ class Player extends Entity {
         }
         this.scene.rexBoard.add.shape(this.board, this.x, this.y, 2, COLOR_PRIMARY).setScale(1);
 
+        // leaving space animation
         let ch = this.board.tileXYZToChess(this.x, this.y, 2);
         this.scene.tweens.addCounter({
             from: 1,
@@ -241,11 +252,13 @@ class Player extends Entity {
             repeat: 0,            // -1: infinity
             yoyo: false,
             onComplete: () => {
+                // new space animation
                 this.move(coordinates[randomIndex].x, coordinates[randomIndex].y);
-                ch = this.board.tileXYZToChess(this.x, this.y, 2);
+                this.updateVisual();
+                ch = this.board.tileXYZToChess(this.x, this.y, 0);
                 this.scene.tweens.addCounter({
                     from: 2,
-                    to: 1,
+                    to: 0.7,
                     ease: 'Linear',       // 'Cubic', 'Elastic', 'Bounce', 'Back'
                     duration: 500,
                     repeat: 0,            // -1: infinity
@@ -262,15 +275,32 @@ class Player extends Entity {
                             ch._scaleY = tween.getValue();
                         }
                     }
-                    
+                });
+                this.scene.tweens.add({
+                    targets: this.visual,
+                    alpha: 1,
+                    scale: 1,
+                    duration: 500,
+                    onComplete: () => {
+                        this.visual.alpha = 1;
+                        this.visual.scale = 1;
+                    }
                 });
             },
             onUpdate(tween, targets, key, current, previous, param) {
                 if (ch) {
+                    // scaling the board space
                     ch._scaleX = tween.getValue();
                     ch._scaleY = tween.getValue();
                 }
             } 
+        });
+        // scaling the image
+        this.scene.tweens.add({
+            targets: this.visual,
+            alpha: 0,
+            scale: 0.1,
+            duration: 500
         });
         // this.move(coordinates[randomIndex].x, coordinates[randomIndex].y);
     }
@@ -362,6 +392,17 @@ class Player extends Entity {
         if (this.board.tileXYZToChess(this.x, this.y, 1)) {
             this.board.tileXYZToChess(this.x, this.y, 1).fillAlpha = 0.35;
         }
+    }
+
+    die() {  
+        super.die();
+        // fade out and shrink the image
+        this.scene.tweens.add({
+            targets: this.visual,
+            alpha: 0,
+            scale: 0.01,
+            duration: 100
+        });
     }
 
 }

@@ -12,6 +12,7 @@ class Game {
         this.altarItems = [];
         this.navigated = false;
         this.extraTurn = false;
+        this.hoverOverAnimationSpaces = [];
     }
 
     createPlayer(x, y, items, cards) {
@@ -43,12 +44,11 @@ class Game {
         this.initializeBoard();
 
         this.updateBoard();
-        // console.log(this.turn);
+
         this.startGame();
     }
 
     initializeBoard() {
-        
         this.board
         .setInteractive()
         .on('tiledown', (pointer, tileXY) => {
@@ -91,36 +91,38 @@ class Game {
                     });
                     if (validSpace) {
                         this.board.tileXYZToChess(tileXY.x, tileXY.y, -1).fillAlpha = 1;
-                        // let ch = this.board.tileXYZToChess(tileXY.x, tileXY.y, -1);
+                        let ch = this.board.tileXYZToChess(tileXY.x, tileXY.y, -1);
                         // console.log(this.board.tileXYZToChess(tileXY.x, tileXY.y, -1));
-                        // this.scene.tweens.addCounter({
-                        //     from: 0.5,
-                        //     to: 1.05,
-                        //     ease: 'Linear',       // 'Cubic', 'Elastic', 'Bounce', 'Back'
-                        //     duration: 350,
-                        //     repeat: -1,            // -1: infinity
-                        //     yoyo: true,
-                        //     onUpdate(tween, targets, key, current, previous, param) {
-                        //         // var value = current;
-                        //         // var value = tween.getValue();
-                        //         ch._scaleX = tween.getValue();
-                        //         ch._scaleY = tween.getValue();
-                        //     }
-                        // });
-                        // this.board.removeChess(null, tileXY.x, tileXY.y, 0,  true);
-                        // this.scene.rexBoard.add.shape(this.board, tileXY.x, tileXY.y, 0, COLOR_PRIMARY).setScale(0.7); 
+                        // create animation where tile gets bigger and smaller
+                        let anim = this.scene.tweens.addCounter({
+                            from: 0.5,
+                            to: 1.05,
+                            ease: 'Linear',       // 'Cubic', 'Elastic', 'Bounce', 'Back'
+                            duration: 350,
+                            repeat: -1,            // -1: infinity
+                            yoyo: true,
+                            onUpdate(tween, targets, key, current, previous, param) {
+                                ch._scaleX = tween.getValue();
+                                ch._scaleY = tween.getValue();
+                                ch.fillAlpha = tween.getValue();
+                            }
+                        });
+                        this.hoverOverAnimationSpaces.push(anim);
                     }
                 }
             });
         })        
         .on('tileout', (pointer, tileXY) => {
-            // this.scene.tweens.getTweens().forEach(tween => {
-            //     tween.seek(300);
-            //     this.scene.time.delayedCall(5, () => {
-            //         tween.stop();
-            //     });
-            //     // tween.destroy();
-            // });
+            this.hoverOverAnimationSpaces.forEach(tween => {
+                // stop animation of tile mouseover
+                tween.stop();
+                let tile = this.board.tileXYZToChess(tileXY.x, tileXY.y, -1);
+                if (tile) {
+                    // set tile scale back to normal
+                    tile._scaleX = 1;
+                    tile._scaleY = 1;
+                }
+            });
             this.players.forEach(player => {
                 // if it is the player's turn, change opacity of tiles that player allowed to move to,
                 // back to normal, only if mouse goes off the tile
@@ -133,8 +135,6 @@ class Game {
                     });
                     if (validSpace) {
                         this.board.tileXYZToChess(tileXY.x, tileXY.y, -1).fillAlpha = 0.5;
-                        // this.board.removeChess(null, tileXY.x, tileXY.y, 0,  true);
-                        // this.scene.rexBoard.add.shape(this.board, tileXY.x, tileXY.y, 0, COLOR_LIGHT).setScale(0.7); 
                     }
                 }
             });
@@ -143,20 +143,17 @@ class Game {
     }
 
     startGame() {
-        // while (this.players.length > 0) {
         this.currentTurn = 0;
         this.players[0].showPossibleSpaces();
         this.items.forEach(item => {
-            // console.log(item.name);
             item.updateVisual();
         });
-            // this.turn.forEach(entityID => {
-            //     this.currentTurn = entityID;
-            // });
-        // }
     }
 
     nextTurn() {
+        if (this.players[0].offBoard) {
+            return;
+        }
         if (!this.extraTurn) {
             this.currentTurn = this.currentTurn + 1;
         }
@@ -172,12 +169,9 @@ class Game {
             this.extraTurn = false;
         }
         this.players[0].checkCards();
-        // console.log(this.currentTurn);
         if (this.currentTurn > this.turn.length - 1) {
             this.currentTurn = 0;
             this.round = this.round + 1;
-            // console.log(this.round);
-            
             // player gains a mutation every round
             this.scene.events.emit("drawMutation", this.players[0].mutations);
             // player gains an action card every 2 rounds
@@ -186,7 +180,7 @@ class Game {
             }
         }
         // monster movement
-        if (this.turn[this.currentTurn] == -1 && !this.navigated) {
+        if (this.turn[this.currentTurn] == -1 && !this.navigated && !this.monster.offBoard) {
             this.navigated = true;
             this.scene.time.delayedCall(250, () => {
                 this.monster.navigate(this.players);
@@ -215,28 +209,21 @@ class Game {
         // check if entities overlap
         this.itemOverlaps();
         this.playerOverlaps();
-        // this.monsterOverlaps();
 
         // redraw entities
         this.players.forEach(player => {
             player.updateVisual();
-            player.showDetectionRadius();
+            // player.showDetectionRadius();
         });
         let pco = this.board.tileXYZToChess(this.players[0].x, this.players[0].y, 0);
-        // console.log(pco);
         let mco = {x: this.monster.x, y: this.monster.y};
-        // console.log(this.monster.x);
-        // console.log(this.board.getDistance(pco,mco));
         if (this.round % this.players[0].revealLocationRounds == 0 || this.board.getDistance(pco,mco) <= 3.5) {
             // show monster location if enough rounds have passed or the monster is close to the player
             this.monster.updateVisual();
-            // console.log("1")
         }
         else {
             this.monster.showOldLocation();
-            // console.log("2")
         }
-        // console.log(this.items);
         this.items.forEach(item => {
             item.updateVisual();
         });
@@ -252,10 +239,9 @@ class Game {
         // only adds item to inventory if player has enough space
         this.items.forEach(item => {
             if (!item.offBoard && this.players[0].itemSpace > this.players[0].items.length && item.x == this.players[0].x && item.y == this.players[0].y) {
-                console.log("overlap");
+                // console.log("overlap");
                 this.players[0].gainItem(item);
                 item.showInfo();
-                // this.board.removeChess(null, item.x, item.y, 0, true);
                 this.items.splice(this.items.indexOf(item), 1);
                 item.removeItemfromBoard();
             }
@@ -273,7 +259,7 @@ class Game {
                 console.log(this.altarItems);
                 this.players[0].items = [];
             }
-            else {
+            if (this.altarItems.length >= 5) {
                 this.monster.die();
                 this.scene.add.text(500, 500, "You Win!", {color:"#FFFFFF"}).setOrigin(0.5);
                 console.log("win");                
@@ -287,7 +273,10 @@ class Game {
     monsterOverlaps() {
         // see if player has escacpe options and use them, if not player dies
         if (this.players[0].x == this.monster.x && this.players[0].y == this.monster.y) {
+            console.log("bruh_");
             if (this.players[0].mutations.find(mutation => mutation == "teleport") != undefined) {
+                console.log("teke");
+
                 this.players[0].teleportEscape(7);
                 this.players[0].mutations.splice(this.players[0].mutations.findIndex(object => {
                     return object == "teleport";
@@ -295,6 +284,8 @@ class Game {
                 return true;
             }
             if (this.players[0].secondChance) {
+                console.log("escape");
+
                 this.players[0].teleportEscape(3);
                 return true;
             }

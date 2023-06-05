@@ -3,18 +3,42 @@ class UI {
         this.game = game
         this.scene = scene;
         this.itemsText = this.scene.add.text(10, 10, "Items: ");
+        this.inventoryVisual = []
         this.action;
         this.actionUsed = false;
         this.mutationCardVisual = null;
     }
 
     updateItemsText() {
-        let itemList = "";
-        this.game.players[0].items.forEach(item => {
-            itemList += item.name + " ";
+        this.inventoryVisual.forEach(item => {
+            item.destroy();
         });
-        this.itemsText.setText("Items: " + itemList);
-    
+        let imageX = 40;
+        let imageY = 60;
+        this.game.players[0].items.forEach(item => {
+            let image = null;
+            if (item.name == "Salt") {
+                image = this.scene.add.image(imageX, imageY, 'salt-b').setOrigin(0.5);
+            }
+            else if (item.name == "Crowbar") {
+                image = this.scene.add.image(imageX, imageY, 'crowbar-b').setOrigin(0.5);
+            }
+            else if (item.name == "Book") {
+                console.log("brue   ")
+                image = this.scene.add.image(imageX, imageY, 'book-b').setOrigin(0.5);
+            }
+            else if (item.name == "Torch") {
+                image = this.scene.add.image(imageX, imageY, 'torch-b').setOrigin(0.5);
+            }
+            else if (item.name == "Cross") {
+                image = this.scene.add.image(imageX, imageY, 'cross-b').setOrigin(0.5);
+            }
+            if (image) {
+                image.setScale(0.05).setAlpha(0.7);
+                imageX += 70;
+                this.inventoryVisual.push(image);
+            }
+        });    
     }
 
     drawCard() {
@@ -103,6 +127,8 @@ class Display extends Phaser.Scene{
         this.load.image('reveal6', 'reveal6.png');
         this.load.image('teleport', 'teleport.png');
         this.load.image('upDown', 'updown.png');
+        this.load.image('arrow', 'arrow.png');
+        this.load.image('x', 'x.png');
     }
     create(){
         //used later to keep track of card number
@@ -112,7 +138,8 @@ class Display extends Phaser.Scene{
         //displays the first card
         this.currentCard = this.add.image(400, 290, this.array[0]).setScale(0.5);
         //left arrow
-        this.left = this.add.text(280, 290, "<", {color: "#00ff00"}).setFontSize(50);
+        this.left = this.add.image(240, 290, "arrow").setScale(0.5);//this.add.text(280, 290, "<", {color: "#00ff00"}).setFontSize(50);
+        this.left.flipX = true;
         this.left.setInteractive({useHandCursor: true});
         this.left.on('pointerdown', () => {
             if(this.num > 1){
@@ -122,9 +149,15 @@ class Display extends Phaser.Scene{
                 this.currentCard = this.add.image(400, 290, this.array[this.num-1]).setScale(0.5);
             }
         })
+        .on('pointerover', () => {
+            this.left.setTint(0x00ff00);
+        })
+        .on('pointerout', () => {
+            this.left.clearTint();
+        })
         //right arrow
         this.right = this.add.text(494, 290, ">", {color: "#00ff00"}).setFontSize(50);
-        this.right.setInteractive({useHandCursor: true});
+        this.right.setInteractive();
         this.right.on('pointerdown', () => {
             if(this.num < this.array.length){
                 this.currentCard.destroy();
@@ -133,12 +166,24 @@ class Display extends Phaser.Scene{
                 this.currentCard = this.add.image(400, 290, this.array[this.num-1]).setScale(0.5);
             }
         })
+        .on('pointerover', () => {
+            this.right.setTint(0x00ff00);
+        })
+        .on('pointerout', () => {
+            this.right.clearTint();
+        })
         //X to quit the ui
         this.leave = this.add.text(750, 0, "X").setFontSize(50);
-        this.leave.setInteractive({useHandCursor: true});
+        this.leave.setInteractive();
         this.leave.on('pointerdown', () => {
             this.scene.stop('display');
             this.scene.resume('examples');
+        })
+        .on('pointerover', () => {
+            this.leave.setScale(0.4);
+        })
+        .on('pointerout', () => {
+            this.leave.setScale(0.35);
         })
     }
 }
