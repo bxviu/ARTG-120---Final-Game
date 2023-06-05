@@ -116,11 +116,11 @@ class Player extends Entity {
 
     showStatus(text) {
         let statustext = this.scene.add.text(this.visual.x, this.visual.y - 30, text, {color:"#FFA500"});
-        statustext.setOrigin(0.5);
+        statustext.setOrigin(0.5).setDepth(10);
         this.scene.tweens.add({ 
             targets: statustext,
-            duration: 2000,
-            y: statustext.y - 20,
+            duration: 4000,
+            y: statustext.y - 10,
             alpha: 0,
             onComplete: () => {
                 statustext.destroy();

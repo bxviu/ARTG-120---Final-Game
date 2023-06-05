@@ -103,7 +103,7 @@ class Monster extends Entity {
         if (this.board.contains(this.oldx, this.oldy, 0)) {
             this.board.removeChess(null, this.oldx, this.oldy, 0, true);
         }
-        this.scene.rexBoard.add.shape(this.board, this.oldx, this.oldy, 0, COLOR_PRIMARY).setScale(0.7).fillAlpha = 0.5;        
+        this.scene.rexBoard.add.shape(this.board, this.oldx, this.oldy, 0, 0xFF0000).setScale(0.7).fillAlpha = 0.5;        
         let chess = this.board.tileXYZToChess(this.oldx, this.oldy, 0);
         if (this.visual) {
             this.visual.setPosition(chess.x, chess.y);
@@ -111,8 +111,8 @@ class Monster extends Entity {
         }
     }
 
-    updateVisual() {  
-        super.updateVisual();
+    updateVisual(color) {  
+        super.updateVisual(color);
         this.visual.setAlpha(1);
         this.oldx = this.x;
         this.oldy = this.y;
@@ -120,6 +120,7 @@ class Monster extends Entity {
     
     die() {  
         super.die();
+        // this.scene.events.emit("status", "Phew");
         // fade out and shrink the image
         this.scene.tweens.add({
             targets: this.visual,

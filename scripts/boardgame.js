@@ -146,7 +146,7 @@ class Game {
         this.currentTurn = 0;
         this.players[0].showPossibleSpaces();
         this.items.forEach(item => {
-            item.updateVisual();
+            item.updateVisual(0xA020F0);
         });
     }
 
@@ -221,19 +221,19 @@ class Game {
         let mco = {x: this.monster.x, y: this.monster.y};
         if (this.round % this.players[0].revealLocationRounds == 0 || this.board.getDistance(pco,mco) <= 3.5) {
             // show monster location if enough rounds have passed or the monster is close to the player
-            this.monster.updateVisual();
+            this.monster.updateVisual(0xFF0000);
         }
         else {
             this.monster.showOldLocation();
         }
         this.items.forEach(item => {
-            item.updateVisual();
+            item.updateVisual(0xA020F0);
         });
         // the altar
-        this.scene.rexBoard.add.shape(this.board, 5, 5, 0, 0xFF0000).setScale(0.7);
-        this.scene.rexBoard.add.shape(this.board, 5, 6, 0, 0xFF0000).setScale(0.7);
-        this.scene.rexBoard.add.shape(this.board, 6, 6, 0, 0xFF0000).setScale(0.7);
-        this.scene.rexBoard.add.shape(this.board, 6, 5, 0, 0xFF0000).setScale(0.7);
+        this.scene.rexBoard.add.shape(this.board, 5, 5, 0, 0x00FF00).setScale(0.7);
+        this.scene.rexBoard.add.shape(this.board, 5, 6, 0, 0x00FF00).setScale(0.7);
+        this.scene.rexBoard.add.shape(this.board, 6, 6, 0, 0x00FF00).setScale(0.7);
+        this.scene.rexBoard.add.shape(this.board, 6, 5, 0, 0x00FF00).setScale(0.7);
      }
 
     itemOverlaps() {
@@ -259,6 +259,9 @@ class Game {
                 console.log("altar");
                 if (this.players[0].items.length != 0) {
                     this.scene.events.emit("status", "Deposited items at the altar");
+                }
+                else {
+                    this.scene.events.emit("status", "No items to deposit at the altar");
                 }
                 this.altarItems.push(...this.players[0].items);
                 console.log(this.altarItems);
