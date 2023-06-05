@@ -142,7 +142,7 @@ var config = {
         mode: Phaser.Scale.FIT,
         autoCenter: Phaser.Scale.CENTER_BOTH,
     },
-    scene: [StartScreen, Demo, Display, EndScreen, ItemInfoScreen]
+    scene: [StartScreen, StoryScreen, Demo, Display, EndScreen, ItemInfoScreen]
     // scene: [Demo, Display, EndScreen, ItemInfoScreen]
 };
 

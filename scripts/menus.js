@@ -54,39 +54,39 @@ class StartScreen extends Menu {
 
         wholeContainer.add([entireBox]);
 
-        let title = this.add.text(0, -190, "Wandering in the Darkness", {font: "50px Arial", fill: "#000000"});
+        let title = this.add.text(0, -50, "In the Darkness", {font: "100px Arial", fill: "#000000", wordWrap: { width: 450, useAdvancedWrap: true}, align: 'center' });
         title.setOrigin(0.5);
 
         wholeContainer.add([title]);
 
-        let instructionsText = this.add.text(0, -20, "You have performed a ritual and summoned a being. " +
-                                            "You must gather the items back and banish it. However, its presence " +
-                                            "has caused unforseen mutations to rapidly form and disappear with " +
-                                            "every step you take. You will die if the being catches you, unless " +
-                                            "you have a mutation or action that may help you escape.\n\nInstructions:" +
-                                            "\nClick to move on the highlighted spaces when it is your turn to move.\n" +
-                                            "You can hold two items before you need to go to the altar at the center " +
-                                            "to place them there and empty your inventory.\nEvery step, you gain a random " +
-                                            "mutation, and every few steps you gain an action card that you can click on " +
-                                            "to use.\nYou won't know the true location of the dark being every step. Only " +
-                                            "after every few steps the monsters true location will be shown." + 
-                                            "" +
-                                            "" +
-                                            "" +
-                                            "", 
-                                            {font: "18px Arial", fill: "#000000", wordWrap: { width: 600, useAdvancedWrap: true }});
-        instructionsText.setOrigin(0.5);
+        // let instructionsText = this.add.text(0, -20, "You have performed a ritual and summoned a being. " +
+        //                                     "You must gather the items back and banish it. However, its presence " +
+        //                                     "has caused unforseen mutations to rapidly form and disappear with " +
+        //                                     "every step you take. You will die if the being catches you, unless " +
+        //                                     "you have a mutation or action that may help you escape.\n\nInstructions:" +
+        //                                     "\nClick to move on the highlighted spaces when it is your turn to move.\n" +
+        //                                     "You can hold two items before you need to go to the altar at the center " +
+        //                                     "to place them there and empty your inventory.\nEvery step, you gain a random " +
+        //                                     "mutation, and every few steps you gain an action card that you can click on " +
+        //                                     "to use.\nYou won't know the true location of the dark being every step. Only " +
+        //                                     "after every few steps the monsters true location will be shown." + 
+        //                                     "" +
+        //                                     "" +
+        //                                     "" +
+        //                                     "", 
+        //                                     {font: "18px Arial", fill: "#000000", wordWrap: { width: 600, useAdvancedWrap: true }});
+        // instructionsText.setOrigin(0.5);
 
-        wholeContainer.add([instructionsText]);
+        // wholeContainer.add([instructionsText]);
 
         // clickable button to start the game
-        let startBox = this.add.rexRoundRectangle(0, 175, 150, 100, 30, 0xffffaa, 1);
+        let startBox = this.add.rexRoundRectangle(0, 135, 150, 100, 30, 0xffffaa, 1);
         startBox.postFX.addShadow(-1,1,0.02,1,0x000000,12,1);
         startBox.setInteractive({useHandCursor: true});
 
         wholeContainer.add([startBox]);
 
-        let startText = this.add.text(0, 175, "Start", { font: '50px Arial', fill: '#ff0000' }).setOrigin(0.5);
+        let startText = this.add.text(0, 135, "Start", { font: '50px Arial', fill: '#ff0000' }).setOrigin(0.5);
 
         wholeContainer.add([startText]);
 
@@ -97,7 +97,8 @@ class StartScreen extends Menu {
             ease: 'Cubic.out',
             onComplete: () => {
                 startBox.on('pointerdown', () => {
-                    this.menuLeave(wholeContainer, "start", "examples", {});    
+                    // this.menuLeave(wholeContainer, "start", "examples", {});    
+                    this.menuLeave(wholeContainer, "start", "story", {num:1,camera: this.cameras.main});    
                 });
             }
         });
