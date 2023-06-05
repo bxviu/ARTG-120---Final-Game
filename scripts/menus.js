@@ -82,7 +82,7 @@ class StartScreen extends Menu {
         // clickable button to start the game
         let startBox = this.add.rexRoundRectangle(0, 175, 150, 100, 30, 0xffffaa, 1);
         startBox.postFX.addShadow(-1,1,0.02,1,0x000000,12,1);
-        startBox.setInteractive();
+        startBox.setInteractive({useHandCursor: true});
 
         wholeContainer.add([startBox]);
 
@@ -136,7 +136,7 @@ class EndScreen extends Menu {
 
         let startBox = this.add.rexRoundRectangle(0, 175, 150, 100, 30, 0xffffaa, 1);
         startBox.postFX.addShadow(-1,1,0.02,1,0x000000,12,1);
-        startBox.setInteractive();
+        startBox.setInteractive({useHandCursor: true});
 
         wholeContainer.add([startBox]);
 
