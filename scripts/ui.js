@@ -35,7 +35,7 @@ class UI {
         }else{
             this.scene.events.emit("gainCard");
         }
-        this.action.setInteractive();
+        this.action.setInteractive({useHandCursor: true});
         this.actionUsed = false;
         let card = null;
         if (rand == 0) {
@@ -65,7 +65,7 @@ class UI {
 
         this.mutationCardVisual = CardMutator.mutate(this.scene, array);
         if (this.mutationCardVisual) {
-            this.mutationCardVisual.setInteractive();
+            this.mutationCardVisual.setInteractive({useHandCursor: true});
             this.mutationCardVisual.on('pointerdown', () => {
                 if(array.length > 0){
                     this.scene.scene.pause('examples');
@@ -113,7 +113,7 @@ class Display extends Phaser.Scene{
         this.currentCard = this.add.image(400, 290, this.array[0]).setScale(0.5);
         //left arrow
         this.left = this.add.text(280, 290, "<", {color: "#00ff00"}).setFontSize(50);
-        this.left.setInteractive();
+        this.left.setInteractive({useHandCursor: true});
         this.left.on('pointerdown', () => {
             if(this.num > 1){
                 this.currentCard.destroy();
@@ -124,7 +124,7 @@ class Display extends Phaser.Scene{
         })
         //right arrow
         this.right = this.add.text(494, 290, ">", {color: "#00ff00"}).setFontSize(50);
-        this.right.setInteractive();
+        this.right.setInteractive({useHandCursor: true});
         this.right.on('pointerdown', () => {
             if(this.num < this.array.length){
                 this.currentCard.destroy();
@@ -135,7 +135,7 @@ class Display extends Phaser.Scene{
         })
         //X to quit the ui
         this.leave = this.add.text(750, 0, "X").setFontSize(50);
-        this.leave.setInteractive();
+        this.leave.setInteractive({useHandCursor: true});
         this.leave.on('pointerdown', () => {
             this.scene.stop('display');
             this.scene.resume('examples');

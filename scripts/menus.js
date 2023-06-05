@@ -235,7 +235,7 @@ class ItemInfoScreen extends Menu {
 
         //X to quit the ui
         let leave = this.add.text(350, -290, "X").setFontSize(50);
-        leave.setInteractive();
+        leave.setInteractive({useHandCursor: true});
         leave.on('pointerdown', () => {
             this.menuLeave(wholeContainer, "iteminfo", "examples", {resume:true});
             this.scene.stop('iteminfo');
