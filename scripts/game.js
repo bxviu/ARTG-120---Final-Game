@@ -74,6 +74,7 @@ class Demo extends Phaser.Scene {
         this.events.removeListener("drawMutation");
         // action listener made in player constructor, which is called in g.initializeGame
         this.events.removeListener("action");
+        this.events.removeListener("status");
 
         this.background = this.add.image(450, 200, "background");
         this.background.setOrigin(0.5);

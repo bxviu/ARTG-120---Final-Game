@@ -97,6 +97,8 @@ class UI {
             duration: 300,
             ease: "Sine.easeInOut",
             onComplete: () => {
+                if (!this.action)
+                    return
                 // card moving down into the corner
                 this.scene.tweens.add({
                     targets: this.action,
@@ -104,6 +106,8 @@ class UI {
                     duration: 200,
                     ease: "Sine.easeInOut",
                     onComplete: () => {
+                        if (!this.action)
+                            return
                         //performs the action
                         this.action.on('pointerdown', () => {
                             if(this.actionUsed == false){
@@ -146,7 +150,8 @@ class UI {
         if (this.mutationCardVisual) {
             this.mutationCardVisual.destroy();
         }
-
+        // let card = 
+        // if (card != null) 
         this.mutationCardVisual = CardMutator.mutate(this.scene, array);
         if (this.mutationCardVisual) {
             this.mutationCardVisual.setInteractive({useHandCursor: true});
@@ -154,6 +159,8 @@ class UI {
             this.mutationCardVisual.x = -100;
             this.mutationCardVisual.y = 340;
             this.mutationCardVisual.setDepth(4);
+            console.log(this.mutationCardVisual)
+            let bruh = this.mutationCardVisual;
             //card moving into the screen right
             this.scene.tweens.add({
                 targets: this.mutationCardVisual,
@@ -161,14 +168,22 @@ class UI {
                 duration: 300,
                 ease: "Sine.easeInOut",
                 onComplete: () => {
+                    // for some reason this.mutationCardVisual has a chance to become null during the animation
+                    // saving the variable to bruh fixes the issue
+                    // console.log(bruh);
+                    // console.log(this.mutationCardVisual)
+                    // if (!this.mutationCardVisual)
+                    //     return
                     // card moving down into the corner
                     this.scene.tweens.add({
-                        targets: this.mutationCardVisual,
+                        targets: bruh,
                         y: 550,
                         duration: 200,
                         ease: "Sine.easeInOut",
                         onComplete: () => {
-                            this.mutationCardVisual.on('pointerdown', () => {
+                            if (!bruh)
+                                return
+                            bruh.on('pointerdown', () => {
                                 if(array.length > 0){
                                     this.scene.scene.pause('examples');
                                     this.scene.scene.launch('display', array);

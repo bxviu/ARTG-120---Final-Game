@@ -37,10 +37,17 @@ class Player extends Entity {
                 randomItem.move(targetCoordinate.x, targetCoordinate.y);
                 randomItem.updateVisual();
                 // this.game.updateBoard();
+                this.scene.events.emit("status", "Pulled " + randomItem.name + " closer");
             }
             else if (card == "escape") {
-                this.secondChance = true;
-                this.addSecondChanceVisual();
+                if (!this.secondChance) {
+                    this.scene.events.emit("status", "Gained a second chance");
+                    this.secondChance = true;
+                    this.addSecondChanceVisual();
+                }
+                else {
+                    this.scene.events.emit("status", "Already have a second chance");
+                }
             }
             else if (card == "extraSpace") {
                 this.game.extraTurn = true;
@@ -53,6 +60,9 @@ class Player extends Entity {
             else {
                 this.actionCard = "none";
             }
+        });
+        this.scene.events.on("status", (text) => {
+            this.showStatus(text);
         });
     }
 
@@ -102,6 +112,20 @@ class Player extends Entity {
         if (!hasMutation) {
             this.showSpacesNormal();
         }
+    }
+
+    showStatus(text) {
+        let statustext = this.scene.add.text(this.visual.x, this.visual.y - 30, text, {color:"#FFA500"});
+        statustext.setOrigin(0.5);
+        this.scene.tweens.add({ 
+            targets: statustext,
+            duration: 2000,
+            y: statustext.y - 20,
+            alpha: 0,
+            onComplete: () => {
+                statustext.destroy();
+            }
+        });
     }
 
     showSpacesNormal() {
@@ -191,6 +215,7 @@ class Player extends Entity {
     }
 
     teleportEscape(distance) {
+        this.scene.events.emit("status", "Escaped!");
         // gets a random location a certain distance away from the player and moves the player there
         var centerX = this.x;
         var centerY = this.y;
@@ -299,6 +324,7 @@ class Player extends Entity {
         }
 
         this.possibleCoords = [...this.possibleCoords, ...coordinates]; 
+        this.scene.events.emit("status", "More spaces");
         this.showGivenSpaces();
     }
 
@@ -356,6 +382,7 @@ class Player extends Entity {
             console.log(this.x + droppedX, this.y + droppedY, droppedItem.id, droppedItem.name);
             this.game.items.push(this.game.createItem(this.x + droppedX, this.y + droppedY, droppedItem.id, droppedItem.name));
             this.game.items[this.game.items.length - 1].updateVisual();
+            this.scene.events.emit("status", "Dropped items due to mutation");
         }
     }
 
@@ -370,6 +397,7 @@ class Player extends Entity {
 
     die() {  
         super.die();
+        this.scene.events.emit("status", "RIP");
         // fade out and shrink the image
         this.scene.tweens.add({
             targets: this.visual,

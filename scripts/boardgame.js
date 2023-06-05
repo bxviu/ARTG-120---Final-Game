@@ -163,6 +163,7 @@ class Game {
             // a delay
             this.currentTurn = -999;
             this.scene.time.delayedCall(150, () => {
+                this.scene.events.emit("status", "Extra turn");
                 this.currentTurn = 0;
                 this.players[0].showPossibleSpaces();
             });
@@ -256,6 +257,9 @@ class Game {
         if (((this.players[0].x == 5 && this.players[0].y == 5) || (this.players[0].x == 5 && this.players[0].y == 6) || (this.players[0].x == 6 && this.players[0].y == 6) || (this.players[0].x == 6 && this.players[0].y == 5))) {
             if (this.altarItems.length < 5) {
                 console.log("altar");
+                if (this.players[0].items.length != 0) {
+                    this.scene.events.emit("status", "Deposited items at the altar");
+                }
                 this.altarItems.push(...this.players[0].items);
                 console.log(this.altarItems);
                 this.players[0].items = [];
